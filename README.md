@@ -58,3 +58,20 @@ Validation errors are always reported.
 
 The library documentation is basically the doxygen  markup of nxvalidate.h
 and the example use case of the command line application in nxvmain.c.
+
+# Building nxvalidate
+
+Currently you have to build nxvalidate from source. 
+
+1. Download or clone the repository
+2. cd into it the source tree
+3. Create a build directory: mkdir build
+4. cd into the build diretory with cd build
+5. Run cmake: cmake ../
+6. Run make: make
+
+This should get it done. Due to a bug in cmake, CMakeLists.txt contains an
+ugly hack which  defines symbol for setting HDF5_HL_LIBRARIES. You may need
+to edit this for your system.
+
+When this job has been finished, there may be binary builds as well.
