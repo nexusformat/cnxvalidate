@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
 	filt.debug = 0;
 
 
-	while ((c = getopt (argc, argv, "a:l:obdu")) != -1) {
+	while ((c = getopt (argc, argv, "a:l:obdut")) != -1) {
     switch (c)
     {
       case 'o':
@@ -86,9 +86,14 @@ int main(int argc, char *argv[])
       case 'u':
         filt.warnUndefined = 1;
         break;
-				case 'd':
-	        filt.debug = 1;
-	        break;
+			case 'd':
+	      filt.debug = 1;
+	      break;
+			case 't':
+				filt.debug = 1;
+				filt.warnUndefined = 1;
+				filt.warnBase = 1;
+				filt.warnOpt = 1;
 			case 'a':
 				appDef = strdup(optarg);
 				break;
@@ -113,7 +118,7 @@ int main(int argc, char *argv[])
 
 	if(argc <= optind){
 		fprintf(stderr,"ERROR: no data file to validate specified\n");
-		fprintf(stderr,"Usage:\n\tnxvvalidate -a appdef -l appdefdir -o -b -u -d datafile\n");
+		fprintf(stderr,"Usage:\n\tnxvvalidate -a appdef -l appdefdir -o -b -u -d -t datafile\n");
 		exit(1);
 	}
 
