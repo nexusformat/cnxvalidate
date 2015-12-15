@@ -85,6 +85,7 @@ set(HDF5_HL_LIBRARIES "/usr/pkg/lib/libhdf5_hl.dylib")
 #-------------------------------------------------------------
 add_subdirectory(include)
 add_subdirectory(src)
+add_subdirectory(test)
 include_directories(include)
 
 link_directories(${HDF5_LIBRARY_DIRS} )

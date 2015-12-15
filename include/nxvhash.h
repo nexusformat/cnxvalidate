@@ -2,6 +2,10 @@
 #ifndef HASH__H
 #define HASH__H
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 #include <stddef.h>             /* For size_t   */
 /*
 ** A hash table consists of an array of these buckets.      Each bucket
@@ -86,5 +90,9 @@ int hash_sorted_enum( hash_table *table, void(*func)(char *, void*));
 */
 
 void hash_free_table(hash_table *table, void (*func)(void *));
+
+#ifdef __cplusplus
+};
+#endif /* __cplusplus */
 
 #endif /* HASH__H */

@@ -253,6 +253,12 @@ int NXVvalidate(pNXVcontext self, char *dataFile,
 
 	NXVprepareContext(self,dataFile,nxdlFile);
 
+
+	/*
+		switch off HDF5 error messages
+	*/
+  H5Eset_auto2( H5E_DEFAULT, NULL, NULL );
+
   fileID = H5Fopen(self->dataFile,H5F_ACC_RDONLY ,H5P_DEFAULT );
 	if(fileID< 0){
 		NXVsetLog(self, "sev","fatal");

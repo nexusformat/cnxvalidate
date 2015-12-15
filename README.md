@@ -9,6 +9,8 @@ of software. You can attempt using it, but you have a good chance of it
 crashing on you or giving false results. Please report any issues with
 nxvalidate as github issues.
 
+
+# nxvalidate
 This is the first version of nxvalidate written in C. Its dependencies
 are libxml2 and the HDF5 libraries. Its purpose it to validate a NeXus file
 against a NeXus application definition. If you do not what all this is, see
@@ -61,7 +63,7 @@ and the example use case of the command line application in nxvmain.c.
 
 # Building nxvalidate
 
-Currently you have to build nxvalidate from source. 
+Currently you have to build nxvalidate from source.
 
 1. Download or clone the repository
 2. cd into it the source tree
