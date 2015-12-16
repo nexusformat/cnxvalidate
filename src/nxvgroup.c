@@ -34,11 +34,17 @@ static void validateGroupAttributes(pNXVcontext self,
 		self->errCount++;
 	} else {
 		if(strcmp(data,(char *)type) != 0){
-			NXVsetLog(self,"sev","error");
-			NXVprintLog(self,"message","Wrong group type, expected %s, got %s",
-			(char *)type, data);
-			NXVlog(self);
-			self->errCount++;
+			/*
+				accept NXsubentry if NXentry is asked for
+			*/
+			if(!(strcmp((char *)type,"NXentry") == 0 &&
+		 	strcmp(data,"NXsubentry") == 0)){
+				NXVsetLog(self,"sev","error");
+				NXVprintLog(self,"message","Wrong group type, expected %s, got %s",
+				(char *)type, data);
+				NXVlog(self);
+				self->errCount++;
+			}
 		}
 	}
 	xmlFree(type);

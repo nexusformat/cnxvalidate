@@ -139,14 +139,22 @@ static herr_t NXVentryIterator(hid_t g_id,
 	if(obj_info.type == H5O_TYPE_GROUP){
 		attrID = H5LTget_attribute_string(g_id,name,
 			"NX_class", nxClass);
-		if(attrID > 0 && strcmp(nxClass,"NXsubentry") == 0)	{
+		if(attrID >= 0 && strcmp(nxClass,"NXsubentry") == 0)	{
 			subID = H5Gopen(g_id,name,H5P_DEFAULT);
 			defID = H5LTread_dataset_string (subID,
 				 "definition", definition );
-			if(defID > 0){
-				H5Iget_name(g_id,nxPath,sizeof(nxPath));
+			H5Iget_name(subID,nxPath,sizeof(nxPath));
+			if(defID >= 0){
 				validatePath(self,nxPath,definition);
 				self->subEntryFound = 1;
+			} else {
+				NXVsetLog(self,"sev","error");
+				NXVsetLog(self,"dataPath",nxPath);
+				NXVprintLog(self,"message",
+				"Cannot validate %s, no application definition",nxClass);
+				NXVlog(self);
+				H5Iget_name(g_id,nxPath,sizeof(nxPath));
+				NXVsetLog(self,"dataPath",nxPath);				
 			}
 			H5Gclose(subID);
 		}
