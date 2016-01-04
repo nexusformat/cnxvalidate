@@ -90,3 +90,19 @@ SCENARIO("Warning about non NeXus group","[nonnexusgroup]"){
     }
   }
 }
+
+SCENARIO("Finding a group specified by type in NXDL","[findByType]"){
+  GIVEN("An initialized validation context"){
+    pNXVcontext con = NXVinit("data");
+    multimap<string,string> *testResult = prepareTest(con);
+    REQUIRE(con != NULL);
+
+    WHEN("Validating group.h5"){
+      int status = NXVvalidate(con,"data/group.h5", NULL, NULL);
+      THEN("Path /entry/data/data_sample should be validated"){
+        REQUIRE(findMessage(testResult,"/entry/data/data_sample",
+          "debug","Validating group"));
+      }
+    }
+  }
+}

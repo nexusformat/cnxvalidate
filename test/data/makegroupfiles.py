@@ -33,6 +33,11 @@ noclass = entry.create_group("missing_class")
 data = entry.create_group('data')
 data.attrs['NX_class'] = numpy.string_('NXdata')
 
+# Test searching a group by typede
+ds = data.create_group('data_sample')
+ds.attrs['NX_class'] = numpy.string_('NXsample')
+
+
 # An extra group not in the application definition
 sample = entry.create_group('sample')
 sample.attrs['NX_class'] = numpy.string_('NXsample')
@@ -41,6 +46,7 @@ sample.attrs['NX_class'] = numpy.string_('NXsample')
 # This provides a test case for a non existing base class too
 data = entry.create_group('wool')
 data.attrs['NX_class'] = numpy.string_('NXwool')
+
 
 
 f.close()

@@ -42,6 +42,8 @@
       <field name="title">
       </field>
       <group type="NXdata" name ="data">
-      </group>              
+        <group type="NXsample">
+        </group>
+      </group>
     </group>
 </definition>
