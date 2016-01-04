@@ -79,3 +79,19 @@ int findMessage(multimap<string,string> *result,
 	}
 	return 0;
 }
+/*-----------------------------------------------------*/
+int testNoError(multimap<string,string> *result,string dataPath)
+{
+	pair <multimap<string,string>::iterator, multimap<string,string>::iterator> ret;
+	multimap<string,string>::iterator it;
+	string sev = "sev=debug";
+
+	ret = result->equal_range(dataPath);
+	for(it = ret.first; it != ret.second; ++it){
+		string test = it->second;
+		if(test.find(sev,0) == string::npos) {
+			return 0;
+		}
+	}
+	return 1;
+}

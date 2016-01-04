@@ -25,7 +25,8 @@
 #
 #=============================================================================
 
-set (NXVTESTSRC catch.hpp testbasics.cpp testmain.cpp testutil.cpp testutil.hpp )
+set (NXVTESTSRC catch.hpp testbasics.cpp testmain.cpp testutil.cpp
+  testgroup.cpp testutil.hpp )
 
 add_executable (nxvtest ${NXVTESTSRC})
 add_test(NAME nxvtest  COMMAND $<TARGET_FILE:nxvtest>)

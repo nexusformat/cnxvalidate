@@ -31,4 +31,13 @@ multimap<string,string> *prepareTest(pNXVcontext con);
   */
 int findMessage(multimap<string,string> *result,
   string dataPath,string severity, string message);
+
+/**
+  * verify that no error has been found for datapath
+  * \param result The result dictionary of the run
+  * \param dataPath The dataPath to checking
+  * \param 1 when no error found, 0 when there is an error
+  */
+int testNoError(multimap<string,string> *result,string dataPath);
+
 #endif
