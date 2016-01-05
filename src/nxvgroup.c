@@ -247,12 +247,30 @@ static void validateLink(pNXVcontext self, hid_t groupID,
 	hid_t objID;
 	herr_t att;
 	char linkTarget[512], dataPath[512];
+  char nxdlPath[512], curPath[512];
 
+	/*
+		set our path for correct error printing
+	*/
+	snprintf(nxdlPath,sizeof(nxdlPath),"%s/%s", self->nxdlPath,
+		(char *)name);
+	NXVsetLog(self,"nxdlPath",nxdlPath);
+	H5Iget_name(groupID,curPath,sizeof(curPath));
+	snprintf(dataPath,sizeof(dataPath),"%s/%s", curPath,
+		(char *)name);
+	NXVsetLog(self,"dataPath",dataPath);
+
+	/*
+		log what we are doing
+	*/
 	NXVsetLog(self,"sev","debug");
 	NXVprintLog(self,"message","Validating link %s at %s",
 		(char *)name, (char *)target);
 	NXVlog(self);
 
+	/*
+		now we really validate
+	*/
 	if(H5LTpath_valid(groupID,(char *)name, 1)){
 		/*
 		  The positive test means that the link exists and is pointing to
