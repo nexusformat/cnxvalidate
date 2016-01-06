@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="nxdlformat.xsl" ?>
+<!--
+# NeXus - Neutron and X-ray Common Data Format
+#
+# Copyright (C) 2008-2014 NeXus International Advisory Committee (NIAC)
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 3 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+# For further information, see http://www.nexusformat.org
+-->
+<definition name="NXunidim" extends="NXobject" type="group"
+  category="application"
+    xmlns="http://definition.nexusformat.org/nxdl/@NXDL_RELEASE@"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://definition.nexusformat.org/nxdl/@NXDL_RELEASE@ ../nxdl.xsd"
+    version="1.0b"
+    >
+    <doc>
+      THis is a minimal application definition for testing nxvalidate
+	    </doc>
+    <group type="NXentry" name="entry">
+      <field name="title" type="NX_CHAR"/>
+      <field name="definition">
+        <doc> Official NeXus NXDL schema to which this file conforms </doc>
+        <enumeration>
+          <item value="NXunidim"/>
+        </enumeration>
+      </field>
+      <field name="gooddata" type="NX_INT">
+          <dimensions rank="3">
+              <dim index="1" value="10"/>
+              <dim index="2" value="128"/>
+              <dim index="3" value="128"/>
+          </dimensions>
+      </field>
+      <field name="mismatchdim" type="NX_INT">
+          <dimensions rank="3">
+              <dim index="1" value="10"/>
+              <dim index="2" value="128"/>
+              <dim index="3" value="128"/>
+          </dimensions>
+      </field>
+      <field name="mismatchrank" type="NX_INT">
+          <dimensions rank="3">
+              <dim index="1" value="10"/>
+              <dim index="2" value="128"/>
+              <dim index="3" value="128"/>
+          </dimensions>
+      </field>
+      <field name="defsymbol" type="NX_INT">
+          <dimensions rank="1">
+              <dim index="1" value="np"/>
+          </dimensions>
+      </field>
+      <field name="symbolok" type="NX_INT">
+          <dimensions rank="1">
+              <dim index="1" value="np"/>
+          </dimensions>
+      </field>
+      <field name="symbolbad" type="NX_INT">
+          <dimensions rank="1">
+              <dim index="1" value="np"/>
+          </dimensions>
+      </field>
+      <field name="goodint" type="NX_INT">
+      </field>
+      <field name="badint" type="NX_INT">
+      </field>
+      <field name="goodposint" type="NX_POSINT">
+      </field>
+      <field name="badposint" type="NX_POSINT">
+      </field>
+      <field name="gooduint" type="NX_UINT">
+      </field>
+      <field name="baduint" type="NX_UINT">
+      </field>
+      <field name="worseuint" type="NX_UINT">
+      </field>
+
+
+      <field name="goodfloat" type="NX_FLOAT">
+      </field>
+      <field name="badfloat" type="NX_FLOAT">
+      </field>
+
+      <field name="goodnumber" type="NX_NUMBER">
+      </field>
+      <field name="alsogoodnumber" type="NX_NUMBER">
+      </field>
+      <field name="badnumber" type="NX_NUMBER">
+      </field>
+
+      <field name="goodtxt" type="NX_CHAR">
+      </field>
+      <field name="badtxt" type="NX_CHAR">
+      </field>
+
+      <field name="goodtime" type="NX_DATE_TIME">
+      </field>
+      <field name="moregoodtime" type="NX_DATE_TIME">
+      </field>
+      <field name="badtime" type="NX_DATE_TIME">
+      </field>
+      <field name="badstringtime" type="NX_DATE_TIME">
+      </field>
+
+      <field name="goodbin" type="NX_BINARY">
+      </field>
+      <field name="badbin" type="NX_BINARY">
+      </field>
+      <field name="reallybadbin" type="NX_BINARY">
+      </field>
+
+      <field name="goodbool" type="NX_BOOLEAN">
+      </field>
+      <field name="badbool" type="NX_BOOLEAN">
+      </field>
+      <field name="reallybadbool" type="NX_BOOLEAN">
+      </field>
+
+
+
+    </group>
+</definition>

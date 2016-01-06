@@ -471,7 +471,8 @@ static void validateType(pNXVcontext self, hid_t fieldID,
 		self->errCount++;
 	}
 
-	if(xmlStrcmp(type,(xmlChar *)"NX_BOOLEAN") == 0 && h5class != H5T_INTEGER){
+	if(xmlStrcmp(type,(xmlChar *)"NX_BOOLEAN") == 0 && (
+		h5class != H5T_INTEGER || H5Tget_size(h5type) != 1)){
 		NXVsetLog(self,"sev","error");
 		len = sizeof(h5dataType);
 		memset(h5dataType,0,len*sizeof(char));
@@ -487,7 +488,7 @@ static void validateType(pNXVcontext self, hid_t fieldID,
 	}
 
 	if(xmlStrcmp(type,(xmlChar *)"NX_UINT") == 0
-		&& h5class != H5T_INTEGER && H5Tget_sign(h5type) != H5T_SGN_NONE){
+		&& (h5class != H5T_INTEGER || H5Tget_sign(h5type) != H5T_SGN_NONE)){
 		NXVsetLog(self,"sev","error");
 		len = sizeof(h5dataType);
 		memset(h5dataType,0,len*sizeof(char));
@@ -497,6 +498,7 @@ static void validateType(pNXVcontext self, hid_t fieldID,
 		NXVlog(self);
 		self->errCount++;
 	}
+
 
 	if(xmlStrcmp(type,(xmlChar *)"NX_CHAR") == 0 && h5class != H5T_STRING){
 		NXVsetLog(self,"sev","error");
@@ -546,7 +548,7 @@ static void validateType(pNXVcontext self, hid_t fieldID,
 	}
 
 	if(xmlStrcmp(type,(xmlChar *)"NX_BINARY") == 0
-		&& h5class != H5T_INTEGER && H5Tget_size(h5type) != 1){
+		&& (h5class != H5T_INTEGER || H5Tget_size(h5type) != 1)){
 		NXVsetLog(self,"sev","error");
 		len = sizeof(h5dataType);
 		memset(h5dataType,0,len*sizeof(char));
