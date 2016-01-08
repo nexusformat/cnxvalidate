@@ -12,6 +12,25 @@
 #include <assert.h>
 #include <libxml/tree.h>
 
+static int testAttType(hid_t fieldID, char *name, hid_t testh5class)
+{
+	hid_t attID, attType, h5class;
+
+	attID = H5Aopen(fieldID,name,H5P_DEFAULT);
+	assert(attID >= 0);
+	attType = H5Aget_type(attID);
+	assert(attType >= 0);
+	h5class = H5Tget_class(attType);
+	H5Tclose(attType);
+	H5Aclose(attID);
+
+	if(testh5class == h5class){
+		return 1;
+	} else {
+		return 0;
+	}
+}
+/*-----------------------------------------------------------------*/
 static void validateData(pNXVcontext self, hid_t fieldID,
 	xmlNodePtr enumNode)
 {
@@ -162,18 +181,20 @@ static void validateDataOffsetStride(pNXVcontext self, hid_t fieldID)
 	}
 }
 /*--------------------------------------------------------------*/
-static void validateAxes(pNXVcontext self, hid_t fieldID)
+static int validateAxes(pNXVcontext self, hid_t fieldID)
 {
 	/*
 	Here we can dissamble the axes attribute and check that all
 	datasets mentioned as axes are present in the enclosing group
 	*/
-	char fname[512], axesData[1024], sep[2], *pPtr;
+	char fname[512], axesData[1024], sep[2], *pPtr, *toFree, *toParse;
 	hid_t gID;
+	int status = 1;
 
 	if(H5LTfind_attribute(fieldID,"axes") == 0){
-		return;
+		return 0;
 	}
+
 
 	/*
 		TODO
@@ -182,6 +203,16 @@ static void validateAxes(pNXVcontext self, hid_t fieldID)
 		colon separated lists. Now we can also have axes attributes as string
 		arrays. This is not yet supported.
 	*/
+
+	if(!testAttType(fieldID,"axes", H5T_STRING)){
+		NXVsetLog(self,"sev","error");
+		NXVprintLog(self,"message",
+			"Invalid data type for axes attribute");
+		NXVlog(self);
+		self->errCount++;
+		return 0;
+	}
+
 
 	memset(fname,0,sizeof(fname));
 	memset(axesData,0,sizeof(axesData));
@@ -208,17 +239,21 @@ static void validateAxes(pNXVcontext self, hid_t fieldID)
 	/*
 		loop all the axes entries and check if the datasets exist
 	*/
-	while((pPtr = strsep(&axesData,sep)) != NULL){
+	toFree = toParse = strdup(axesData);
+	while((pPtr = strsep(&toParse,sep)) != NULL){
 		if(!H5LTfind_dataset(gID,pPtr)){
 			NXVsetLog(self,"sev","error");
 			NXVprintLog(self,"message",
 				"Dataset %s required by axes attribute not found", pPtr);
 			NXVlog(self);
 			self->errCount++;
+			status = 0;
 		}
 	}
 
+	free(toFree);
 	H5Gclose(gID);
+	return status;
 }
 /*--------------------------------------------------------------*/
 static void validateInterpretation(pNXVcontext self, hid_t fieldID)
@@ -230,7 +265,7 @@ static void validateInterpretation(pNXVcontext self, hid_t fieldID)
 		"image",
 		"rgba-image",
 		"hsla-image",
-		"cmyk_image",
+		"cmyk-image",
 		"vertex",
 		NULL
 	};
@@ -245,13 +280,23 @@ static void validateInterpretation(pNXVcontext self, hid_t fieldID)
 	if(!H5LTfind_attribute(fieldID,"interpretation")){
 		return;
 	}
+
+	if(!testAttType(fieldID,"interpretation", H5T_STRING)){
+		NXVsetLog(self,"sev","error");
+		NXVprintLog(self,"message",
+			"Invalid data type for interpretation attribute");
+		NXVlog(self);
+		self->errCount++;
+		return ;
+	}
+
 	memset(h5name,0,sizeof(h5name));
 	memset(attData,0,sizeof(attData));
 	H5Iget_name(fieldID,h5name,sizeof(h5name));
 	H5LTget_attribute_string(self->fileID,h5name,"interpretation",attData);
 	i = 0;
 	while(allowedValues[i] != NULL){
-		if(strcmp(allowedValues,attData) == 0){
+		if(strcmp(allowedValues[i],attData) == 0){
 			return;
 		}
 		i++;
@@ -283,13 +328,24 @@ static void validateCalibration(pNXVcontext self, hid_t fieldID)
 	if(!H5LTfind_attribute(fieldID,"calibration_status")){
 		return;
 	}
+
+	if(!testAttType(fieldID,"calibration_status", H5T_STRING)){
+		NXVsetLog(self,"sev","error");
+		NXVprintLog(self,"message",
+			"Invalid data type for calibration_status attribute");
+		NXVlog(self);
+		self->errCount++;
+		return ;
+	}
+
+
 	memset(h5name,0,sizeof(h5name));
 	memset(attData,0,sizeof(attData));
 	H5Iget_name(fieldID,h5name,sizeof(h5name));
 	H5LTget_attribute_string(self->fileID,h5name,"calibration_status",attData);
 	i = 0;
 	while(allowedValues[i] != NULL){
-		if(strcmp(allowedValues,attData) == 0){
+		if(strcmp(allowedValues[i],attData) == 0){
 			return;
 		}
 		i++;
@@ -631,6 +687,33 @@ static int AxisValidator(pNXVcontext self, hid_t fieldID,
 	return 0;
 }
 /*--------------------------------------------------------------*/
+static int AxesValidator(pNXVcontext self, hid_t fieldID,
+	char *testValue)
+{
+	char h5value[132];
+	char h5name[512];
+	int ih5value, status;
+	hid_t attID, attType;
+	H5T_class_t h5class;
+
+
+	status = validateAxes(self,fieldID);
+	if(status == 0){
+		return 0;
+	}
+
+	memset(h5value,0,sizeof(h5value));
+	memset(h5name,0,sizeof(h5name));
+
+	H5Iget_name(fieldID,h5name,sizeof(h5name));
+	H5LTget_attribute_string(self->fileID,h5name,"axes",h5value);
+	if(strcmp(h5value,testValue) == 0){
+			return 1;
+	} else {
+			return 0;
+	}
+}
+/*--------------------------------------------------------------*/
 static int SignalValidator(pNXVcontext self, hid_t fieldID,
 	char *testValue)
 {
@@ -768,6 +851,7 @@ static int TransformationValidator(pNXVcontext self, hid_t fieldID,
 static AttributeValidationData attValData[] = {
 	{"signal",SignalValidator},
 	{"axis",AxisValidator},
+	{"axes", AxesValidator},
 	{"primary",PrimaryValidator},
 	{"transformation_type", TransformationValidator},
 	NULL};
@@ -871,7 +955,7 @@ static void validateAttributes(pNXVcontext self, hid_t fieldID,
 									NXVsetLog(self,"sev","error");
 									NXVprintLog(self,"message",
 										"Invalid value for attribute %s",
-										attValData[i].name);
+										name);
 										NXVlog(self);
 										self->errCount++;
 									}
@@ -893,7 +977,7 @@ static void validateAttributes(pNXVcontext self, hid_t fieldID,
 	checked from the validateDependsOn function in nxvgroup.c
 	*/
 	validateDataOffsetStride(self, fieldID);
-	validateAxes(self, fieldID);
+	/* validateAxes(self, fieldID); */
 	validateInterpretation(self,fieldID);
 	validateCalibration(self,fieldID);
 }

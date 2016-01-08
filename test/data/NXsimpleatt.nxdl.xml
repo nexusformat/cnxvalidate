@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="nxdlformat.xsl" ?>
+<!--
+# NeXus - Neutron and X-ray Common Data Format
+#
+# Copyright (C) 2008-2014 NeXus International Advisory Committee (NIAC)
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 3 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+# For further information, see http://www.nexusformat.org
+-->
+<definition name="NXsimpleatt" extends="NXobject" type="group"
+  category="application"
+    xmlns="http://definition.nexusformat.org/nxdl/@NXDL_RELEASE@"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://definition.nexusformat.org/nxdl/@NXDL_RELEASE@ ../nxdl.xsd"
+    version="1.0b"
+    >
+    <doc>
+      THis is a minimal application definition for testing nxvalidate
+	    </doc>
+    <group type="NXentry" name="entry">
+      <field name="definition">
+        <doc> Official NeXus NXDL schema to which this file conforms </doc>
+        <enumeration>
+          <item value="NXsimpleatt"/>
+        </enumeration>
+      </field>
+      <field name="intsignal" type="NX_INT" signal="1">
+          <dimensions rank="2">
+              <dim index="1" value="128"/>
+              <dim index="2" value="128"/>
+          </dimensions>
+      </field>
+      <field name="txtsignal" type="NX_INT" signal="1">
+          <dimensions rank="2">
+              <dim index="1" value="128"/>
+              <dim index="2" value="128"/>
+          </dimensions>
+      </field>
+      <field name="badsignal" type="NX_INT" signal="1">
+          <dimensions rank="2">
+              <dim index="1" value="128"/>
+              <dim index="2" value="128"/>
+          </dimensions>
+      </field>
+      <field name="wrongsignal" type="NX_INT" signal="1">
+          <dimensions rank="2">
+              <dim index="1" value="128"/>
+              <dim index="2" value="128"/>
+          </dimensions>
+      </field>
+      <field name="intprim" type="NX_INT" primary="1">
+          <dimensions rank="2">
+              <dim index="1" value="128"/>
+              <dim index="2" value="128"/>
+          </dimensions>
+      </field>
+      <field name="txtprim" type="NX_INT" primary="1">
+          <dimensions rank="2">
+              <dim index="1" value="128"/>
+              <dim index="2" value="128"/>
+          </dimensions>
+      </field>
+      <field name="badprim" type="NX_INT" primary="1">
+          <dimensions rank="2">
+              <dim index="1" value="128"/>
+              <dim index="2" value="128"/>
+          </dimensions>
+      </field>
+      <field name="wrongprim" type="NX_INT" primary="1">
+          <dimensions rank="2">
+              <dim index="1" value="128"/>
+              <dim index="2" value="128"/>
+          </dimensions>
+      </field>
+      <field name="intaxis" type="NX_FLOAT" axis="1">
+        <dimensions rank="">
+            <dim index="1" value="128"/>
+        </dimensions>
+      </field>
+      <field name="txtaxis" type="NX_FLOAT" axis="1">
+        <dimensions rank="1">
+            <dim index="1" value="128"/>
+        </dimensions>
+      </field>
+      <field name="badaxis" type="NX_FLOAT" axis="1">
+        <dimensions rank="1">
+            <dim index="1" value="128"/>
+        </dimensions>
+      </field>
+      <field name="wrongaxis" type="NX_FLOAT" axis="1">
+        <dimensions rank="1">
+            <dim index="1" value="128"/>
+        </dimensions>
+      </field>
+      <field name="colonaxes" type="NX_INT">
+          <dimensions rank="2">
+              <dim index="1" value="128"/>
+              <dim index="2" value="128"/>
+          </dimensions>
+          <attribute name="axes" type="NX_CHAR">
+              <enumeration>
+                  <item value="intaxis:txtaxis"/>
+              </enumeration>
+          </attribute>
+      </field>
+      <field name="commaaxes" type="NX_INT">
+          <dimensions rank="2">
+              <dim index="1" value="128"/>
+              <dim index="2" value="128"/>
+          </dimensions>
+          <attribute name="axes" type="NX_CHAR">
+              <enumeration>
+                  <item value="intaxis,txtaxis"/>
+              </enumeration>
+          </attribute>
+      </field>
+      <field name="brokenaxes" type="NX_INT">
+          <dimensions rank="2">
+              <dim index="1" value="128"/>
+              <dim index="2" value="128"/>
+          </dimensions>
+          <attribute name="axes" type="NX_CHAR">
+              <enumeration>
+                  <item value="intaxis,txtaxis"/>
+              </enumeration>
+          </attribute>
+      </field>
+      <field name="morebrokenaxes" type="NX_INT">
+          <dimensions rank="2">
+              <dim index="1" value="128"/>
+              <dim index="2" value="128"/>
+          </dimensions>
+          <attribute name="axes" type="NX_CHAR">
+              <enumeration>
+                  <item value="untaxis,txtaxis"/>
+              </enumeration>
+          </attribute>
+      </field>
+      <field name="invalidaxes" type="NX_INT">
+          <dimensions rank="2">
+              <dim index="1" value="128"/>
+              <dim index="2" value="128"/>
+          </dimensions>
+          <attribute name="axes" type="NX_CHAR">
+              <enumeration>
+                  <item value="gargel,gurks"/>
+              </enumeration>
+          </attribute>
+      </field>
+      <field name="goodoffsetstride" type="NX_INT">
+          <dimensions rank="2">
+              <dim index="1" value="128"/>
+              <dim index="2" value="128"/>
+          </dimensions>
+      </field>
+      <field name="baddimoffsetstride" type="NX_INT">
+          <dimensions rank="2">
+              <dim index="1" value="128"/>
+              <dim index="2" value="128"/>
+          </dimensions>
+      </field>
+      <field name="badtypeoffsetstride" type="NX_INT">
+          <dimensions rank="2">
+              <dim index="1" value="128"/>
+              <dim index="2" value="128"/>
+          </dimensions>
+      </field>
+      <field name="onemissingoffsetstride" type="NX_INT">
+          <dimensions rank="2">
+              <dim index="1" value="128"/>
+              <dim index="2" value="128"/>
+          </dimensions>
+      </field>
+      <field name="calnominal" type="NX_INT">
+          <dimensions rank="2">
+              <dim index="1" value="128"/>
+              <dim index="2" value="128"/>
+          </dimensions>
+      </field>
+      <field name="calbadtype" type="NX_INT">
+          <dimensions rank="2">
+              <dim index="1" value="128"/>
+              <dim index="2" value="128"/>
+          </dimensions>
+      </field>
+      <field name="calnmes" type="NX_INT">
+          <dimensions rank="2">
+              <dim index="1" value="128"/>
+              <dim index="2" value="128"/>
+          </dimensions>
+      </field>
+      <field name="calwrong" type="NX_INT">
+          <dimensions rank="2">
+              <dim index="1" value="128"/>
+              <dim index="2" value="128"/>
+          </dimensions>
+      </field>
+      <field name="intscaler" type="NX_INT">
+          <dimensions rank="2">
+              <dim index="1" value="128"/>
+              <dim index="2" value="128"/>
+          </dimensions>
+      </field>
+      <field name="intspec" type="NX_INT">
+          <dimensions rank="2">
+              <dim index="1" value="128"/>
+              <dim index="2" value="128"/>
+          </dimensions>
+      </field>
+      <field name="intimage" type="NX_INT">
+          <dimensions rank="2">
+              <dim index="1" value="128"/>
+              <dim index="2" value="128"/>
+          </dimensions>
+      </field>
+      <field name="intrgba" type="NX_INT">
+          <dimensions rank="2">
+              <dim index="1" value="128"/>
+              <dim index="2" value="128"/>
+          </dimensions>
+      </field>
+      <field name="inthsla" type="NX_INT">
+          <dimensions rank="2">
+              <dim index="1" value="128"/>
+              <dim index="2" value="128"/>
+          </dimensions>
+      </field>
+      <field name="intcmyk" type="NX_INT">
+          <dimensions rank="2">
+              <dim index="1" value="128"/>
+              <dim index="2" value="128"/>
+          </dimensions>
+      </field>
+      <field name="intvertex" type="NX_INT">
+          <dimensions rank="2">
+              <dim index="1" value="128"/>
+              <dim index="2" value="128"/>
+          </dimensions>
+      </field>
+      <field name="intbad" type="NX_INT">
+          <dimensions rank="2">
+              <dim index="1" value="128"/>
+              <dim index="2" value="128"/>
+          </dimensions>
+      </field>
+      <field name="intbadtype" type="NX_INT">
+          <dimensions rank="2">
+              <dim index="1" value="128"/>
+              <dim index="2" value="128"/>
+          </dimensions>
+      </field>
+    </group>
+</definition>
