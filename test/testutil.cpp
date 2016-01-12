@@ -49,7 +49,12 @@ static void TestLogger(hash_table *logData, void *userData)
 	slogData = string("");
 	hash_enumerate(logData,storeLog);
 	resultMap->insert(pair<string,string>(dataPath, slogData));
-	cout << slogData << "\n";
+	/*
+		This is useful for debugging tests but should be out in the
+		end.
+	*/
+	//cout << dataPath << ":" <<slogData << "\n";
+
 }
 
 /*-----------------------------------------------------*/

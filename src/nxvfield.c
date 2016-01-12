@@ -865,6 +865,25 @@ static int findAttValidator(char *name){
 	}
 	return -1;
 }
+/*--------------------------------------------------------------
+	we ignore the depends_on attributes in this general scheme for now.
+	They are checked when validating the depends_on chain
+----------------------------------------------------------------*/
+static attIgnored(char *attribute)
+{
+	char *toIgnore[] = {"transformation_type", "vector","offset",
+	 	"depends_on",NULL};
+	int i = 0;
+
+	while(toIgnore[i] != NULL){
+		if(strcmp(toIgnore[i],attribute) == 0){
+			return 1;
+		}
+		i++;
+	}
+
+	return 0;
+}
 /*--------------------------------------------------------------*/
 static void validateAttributes(pNXVcontext self, hid_t fieldID,
 	xmlNodePtr fieldNode)
@@ -892,6 +911,9 @@ static void validateAttributes(pNXVcontext self, hid_t fieldID,
 	for(i = 0; attValData[i].name != NULL; i++){
 			data = xmlGetProp(fieldNode,(xmlChar *) attValData[i].name);
 			if(data != NULL){
+					if(attIgnored(attValData[i].name)){
+					continue;
+					}
 					if(!H5LTfind_attribute(fieldID, attValData[i].name)){
 						NXVsetLog(self,"sev","error");
 						NXVprintLog(self,"message","Required attribute %s missing",
@@ -919,6 +941,9 @@ static void validateAttributes(pNXVcontext self, hid_t fieldID,
 	while(cur != NULL){
 		if(xmlStrcmp(cur->name,(xmlChar *)"attribute") == 0){
 			name = xmlGetProp(cur,(xmlChar *)"name");
+			if(attIgnored(name)) {
+				continue;
+			}
 			if(!H5LTfind_attribute(fieldID,(char*)name)){
 				NXVsetLog(self,"sev","error");
 				NXVprintLog(self,"message","Required attribute %s missing",

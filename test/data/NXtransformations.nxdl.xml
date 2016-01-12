@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="nxdlformat.xsl" ?>
+<!--
+# NeXus - Neutron and X-ray Common Data Format
+#
+# Copyright (C) 2014 NeXus International Advisory Committee (NIAC)
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 3 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+# For further information, see http://www.nexusformat.org
+-->
+<definition xmlns="http://definition.nexusformat.org/nxdl/@NXDL_RELEASE@"
+	category="contributed"
+	name="NXtransformations"
+	version="1.0"
+	type="group"
+	extends="NXobject"
+	ignoreExtraGroups="true"
+	ignoreExtraFields="true"
+	ignoreExtraAttributes="true"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://definition.nexusformat.org/nxdl/@NXDL_RELEASE@ ../nxdl.xsd"
+	>
+
+	<doc>
+		Use ``NXtransformations`` to gather together any set of movable or fixed
+		elements positioning the device described by the class that contains this.
+
+		NXtransformations and depends_on fields in other classes are used to encode
+		the transformations necessary to position the element which contains the
+		NXtransformations group.
+
+		The groups required content is depends_on field which contains the name of the
+		first field of the transformation chain.
+
+		Each field particiapting in the transformation chain must have the following
+		attributes:
+
+		* offset: A three float vector attribute which specifies a translation to
+		  apply before performing the actual operation of the field
+		* transformation_type: A text attribute which can the value of either
+		  translation or rottaion. This specifies the type of operation encoded.
+		* vector: A  three float attribute which describes the axis along which
+		  we translate or around which we rotate
+		* depends_on: A text attribute pointing to the next field in the
+		  transformation hierarchy.
+
+		For field specifications in depends_on, both the field and attribute, the
+		following things are allowed:
+
+		* . A point terminates the transformation chain
+		* An absolute path in the HDF-5 file
+		* A relative path deeper into the NeXus hierarchy
+		* A field in the same group.
+
+		Depends_on chains must be terminated with a period.
+
+		The value of the translation or rotation is the value of the field.
+	</doc>
+
+	<!-- This does not seem to work, we cannot define anonymous fields (yet) -->
+	<field name="depends_on" type="NX_CHAR">
+		<doc> The name of the field at the start of the depends_on chain</doc>
+	</field>
+</definition>

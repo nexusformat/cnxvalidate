@@ -317,11 +317,20 @@ static void validateLink(pNXVcontext self, hid_t groupID,
 }
 /*-------------------------------------------------------------*/
 static hid_t findDependentField(pNXVcontext self,
-		hid_t groupID,char *dpData)
+		hid_t inFieldID,char *dpData)
 {
 	char *pPtr;
-	hid_t fieldID;
-	char fname[512], newPath[1024];
+	hid_t fieldID, groupID;
+	char fname[512], newPath[1024], groupName[1024];
+
+	/*
+		get at enclosing group
+  */
+	memset(groupName,0,sizeof(groupName));
+	H5Iget_name(inFieldID,groupName,sizeof(groupName));
+	pPtr = strrchr(groupName,'/');
+	*pPtr = '\0';
+	pPtr = NULL;
 
 	pPtr = strchr(dpData,'/');
 
@@ -336,11 +345,9 @@ static hid_t findDependentField(pNXVcontext self,
 			}
 		} else {
 			/* relative path further along the path */
-			memset(fname,0,sizeof(fname));
-			H5Iget_name(groupID,fname,sizeof(fname));
-			snprintf(newPath,sizeof(newPath), "%s/%s", fname, dpData);
+			snprintf(newPath,sizeof(newPath), "%s/%s", groupName, dpData);
 			if(H5LTpath_valid(self->fileID,newPath,1)){
-				fieldID = H5Oopen(self->fileID,dpData,H5P_DEFAULT);
+				fieldID = H5Oopen(self->fileID,newPath,H5P_DEFAULT);
 				return fieldID;
 			} else {
 				return -1;
@@ -348,10 +355,13 @@ static hid_t findDependentField(pNXVcontext self,
 		}
 	} else {
 		/* path within the group */
+		groupID = H5Oopen(self->fileID, groupName,H5P_DEFAULT);
 		if(H5LTfind_dataset(groupID,dpData)){
 			fieldID = H5Dopen(groupID,dpData,H5P_DEFAULT);
+			H5Oclose(groupID);
 			return fieldID;
 		} else {
+			H5Oclose(groupID);
 			return -1;
 		}
 	}
@@ -488,7 +498,11 @@ static void validateDependsOnField(pNXVcontext self,
 	memset(fname,0,sizeof(fname));
 	memset(transData,0,sizeof(transData));
 
-	H5Iget_name(dpField,fname,sizeof(fname));
+	H5Iget_name(dpFieldID,fname,sizeof(fname));
+	NXVsetLog(self,"dataPath", fname);
+	NXVsetLog(self,"sev","debug");
+	NXVprintLog(self,"message","Validating depends_on element %s", fname);
+	NXVlog(self);
 
 	/*
 		validate the simple ones
@@ -498,7 +512,7 @@ static void validateDependsOnField(pNXVcontext self,
 	/*
 		follow the depends_on chain
 	*/
-	if(!H5LTfind_attribute(dpField,"depends_on")){
+	if(!H5LTfind_attribute(dpFieldID,"depends_on")){
 			NXVsetLog(self,"sev","error");
 			NXVprintLog(self,"message",
 				"Missing attribute depends_on on %s",
@@ -506,7 +520,7 @@ static void validateDependsOnField(pNXVcontext self,
 			NXVlog(self);
 			self->errCount++;
 	} else {
-		attID = H5Aopen(dpField,"depends_on",H5P_DEFAULT);
+		attID = H5Aopen(dpFieldID,"depends_on",H5P_DEFAULT);
 		assert(attID >= 0);
 		attType = H5Aget_type(attID);
 		assert(attType >= 0);
@@ -525,7 +539,7 @@ static void validateDependsOnField(pNXVcontext self,
 				H5Dclose(dpFieldID);
 				return;
 			} else {
-				dpField = findDependentField(self,groupID,transData);
+				dpField = findDependentField(self,dpFieldID,transData);
 				if(dpField < 0){
 						NXVsetLog(self,"sev","error");
 						NXVprintLog(self,"message","Dependency chain broken at %s, %s %s",
@@ -544,13 +558,19 @@ static void validateDependsOnField(pNXVcontext self,
 static void validateDependsOn(pNXVcontext self, hid_t groupID,
 	hid_t fieldID)
 {
-	/* TODO */
 	char fname[512], dpData[1024];
 	hid_t h5type, dpfieldID;
 	H5T_class_t h5class;
 
 	memset(fname,0,sizeof(fname));
 	memset(dpData,0,sizeof(dpData));
+	H5Iget_name(fieldID,fname,sizeof(fname));
+	NXVsetLog(self,"dataPath",fname);
+	NXVsetLog(self,"sev","debug");
+	NXVprintLog(self,"message","Validating depends_on chain starting at %s",
+						fname);
+	NXVlog(self);
+
 	/*
 		test that the depends_on field is of the right type
 	*/
@@ -574,7 +594,8 @@ static void validateDependsOn(pNXVcontext self, hid_t groupID,
 	/*
 		find the field and start iterating through the chain
 	*/
-	dpfieldID = findDependentField(self,groupID,dpData);
+
+	dpfieldID = findDependentField(self,fieldID,dpData);
 	if(dpfieldID < 0){
 		NXVsetLog(self,"sev","error");
 		NXVprintLog(self,"message",
