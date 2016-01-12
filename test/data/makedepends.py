@@ -66,6 +66,24 @@ setCIF(ds,(0.,0.,0.),(0.,0.,1.),'translation','.')
 transdep = f['/startwrong/sample/transform/depends_on']
 transdep[0] = numpy.string_('schnueffel')
 
+# A case where an element in the depends_on chain cannot be found
+makeSkeleton('notfound')
+
+ds = f['/notfound/sample/rotation_angle']
+setCIF(ds,(0.,0.,0.),(0.,1.,0.),'rotation','transform/z')
+trans = f['/notfound/sample/transform']
+
+ds = trans.create_dataset('x',(1,),'f32')
+ds[0] = 122.
+setCIF(ds,(0.,0.,0.),(1.,0.,0.),'translation','/good/sample/schnueffel')
+
+ds = trans.create_dataset('z',(1,),'f32')
+ds[0] = -23.
+setCIF(ds,(0.,0.,0.),(0.,0.,1.),'translation','.')
+
+transdep = f['/notfound/sample/transform/depends_on']
+transdep[0] = numpy.string_('x')
+
 
 # An unterminated depends_on chain
 makeSkeleton('unterminated')

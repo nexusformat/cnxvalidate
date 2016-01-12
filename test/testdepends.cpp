@@ -50,6 +50,21 @@ SCENARIO("Testing for failure when depends_on field points nowhere ","[depfieldb
     }
   }
 }
+SCENARIO("Testing for failure when depends_on attribute points nowhere ","[depnotfound]"){
+  GIVEN("An initialized validation context"){
+    pNXVcontext con = NXVinit("data");
+    multimap<string,string> *testResult = prepareTest(con);
+    REQUIRE(con != NULL);
+
+    WHEN("Validating depends.h5"){
+      int status = NXVvalidate(con,"data/depends.h5", NULL, NULL);
+			THEN("Path /notfound/sample/transform/x should report element not found"){
+				REQUIRE(findMessage(testResult,"/notfound/sample/transform/x", "error",
+				"/good/sample/schnueffel pointing nowhere"));
+			}
+    }
+  }
+}
 SCENARIO("Flag error on missing depends_on attribute == broken chain ","[depbroken]"){
   GIVEN("An initialized validation context"){
     pNXVcontext con = NXVinit("data");
