@@ -33,10 +33,6 @@ add_executable (nxvtest ${NXVTESTSRC})
 add_test(NAME nxvtest  COMMAND $<TARGET_FILE:nxvtest>)
 enable_testing(true)
 
-# This is an ugly hack to work around the fact that the default
-# cmake HDF5 library search thing does not set this variable though
-# says it does.
-set(HDF5_HL_LIBRARIES "/usr/pkg/lib/libhdf5_hl.dylib")
 
 set (NXVLINK)
 include_directories(${HDF5_INCLUDE_DIRS} ../include ${LIBXML2_INCLUDE_DIR} )

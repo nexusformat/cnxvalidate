@@ -61,7 +61,10 @@ static void validateData(pNXVcontext self, hid_t fieldID,
 			value = xmlGetProp(cur,(xmlChar *)"value");
 			if(value != NULL){
 				if(xmlStrcmp(value,(xmlChar *)textData) == 0){
+				  xmlFree(value);
 					return;
+				} else {
+				  xmlFree(value);
 				}
 			}
 		}
@@ -402,6 +405,7 @@ static void validateDimensions(pNXVcontext self, hid_t fieldID,
 			self->errCount++;
 			return; /* further dimension checking makes no sense here */
 		}
+		xmlFree(data);
 	} else {
 		NXVsetLog(self,"sev","error");
 		NXVsetLog(self,"message",
@@ -455,6 +459,8 @@ static void validateDimensions(pNXVcontext self, hid_t fieldID,
 					}
 				}
 			}
+			xmlFree(index);
+			xmlFree(val);
 		}
 		dim = dim->next;
 	}
@@ -898,11 +904,13 @@ static void validateAttributes(pNXVcontext self, hid_t fieldID,
 	data = xmlGetProp(fieldNode,(xmlChar *)"type");
 	if(data != NULL){
 		validateType(self,fieldID,data);
+		xmlFree(data);
 	}
 
 	data = xmlGetProp(fieldNode,(xmlChar *)"units");
 	if(data != NULL){
 		validateUnits(self,fieldID,data);
+		xmlFree(data);
 	}
 
 	/*
@@ -931,6 +939,7 @@ static void validateAttributes(pNXVcontext self, hid_t fieldID,
 							self->errCount++;
 						}
 					}
+					xmlFree(data);
 			}
 	}
 
@@ -970,8 +979,12 @@ static void validateAttributes(pNXVcontext self, hid_t fieldID,
 											status = attValData[i].dataValidator(self,fieldID,data);
 											if(status == 1){
 												attOK = 1;
+												xmlFree(data);
 												break;
 											}
+										}
+										if(data != NULL){
+										  xmlFree(data);
 										}
 									}
 									item = item->next;
@@ -988,6 +1001,7 @@ static void validateAttributes(pNXVcontext self, hid_t fieldID,
 					attData = attData->next;
 				}
 			}
+			xmlFree(name);
 		}
 		cur = cur->next;
 	}
@@ -1018,6 +1032,7 @@ int NXVvalidateField(pNXVcontext self, hid_t fieldID,
 	name = xmlGetProp(fieldNode,(xmlChar *)"name");
 	snprintf(nxdlName,sizeof(nxdlName),"%s/%s",
 		self->nxdlPath,name);
+	xmlFree(name);
 	H5Iget_name(fieldID,fName,sizeof(fName));
 	NXVsetLog(self,"sev","debug");
 	NXVsetLog(self,"message","Validating field");

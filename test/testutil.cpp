@@ -7,7 +7,7 @@
 	* Mark Koennecke, mark.koennecke@psi.ch, and NIAC
 	* December 2015
 	*/
-#include <string>
+#include <string.h>
 #include <iostream>
 #include <nxvalidate.h>
 #include "testutil.hpp"

@@ -47,6 +47,8 @@ static int validateFileAttributes(pNXVcontext self, hid_t fileID)
 	NXVsetLog(self,"message","Validating file attributes");
 	NXVlog(self);
 
+	memset(data,0,sizeof(data));
+
 	NXVsetLog(self,"dataPath","/");
 	attID = H5LTget_attribute_string(fileID,"/","file_name",data);
 	if(attID < 0){
@@ -120,6 +122,8 @@ static int validatePath(pNXVcontext self, char *path, char *rawNxdlFile)
 
 	self->nxdlPath = NULL;
 	status = NXVvalidateGroup(self, groupID, groupNode);
+	xmlFreeDoc(self->nxdlDoc);
+	self->nxdlDoc = NULL;
 	return status;
 }
 /*---------------------------------------------------------------*/
@@ -252,14 +256,14 @@ static herr_t NXVrootIterator(hid_t g_id,
 	return 0;
 }
 /*---------------------------------------------------------------*/
-int NXVvalidate(pNXVcontext self, char *dataFile,
-								char *nxdlFile, char *path)
+int NXVvalidate(pNXVcontext self, const char *dataFile,
+	        const char *nxdlFile, const char *path)
 {
 	hid_t fileID, gid;
 	hsize_t idx = 0;
   int status = 0, returnVal = 0;
 
-	NXVprepareContext(self,dataFile,nxdlFile);
+  NXVprepareContext(self,(char *)dataFile,(char *)nxdlFile);
 
 
 	/*
@@ -285,7 +289,7 @@ int NXVvalidate(pNXVcontext self, char *dataFile,
 	* we have been give an explicit path to validate
 	*/
   if(path != NULL){
-		status = validatePath(self,path,nxdlFile);
+    status = validatePath(self,(char *)path,(char *)nxdlFile);
 	} else {
 		/*
 		  we iterate over all root level groups in

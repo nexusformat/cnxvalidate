@@ -43,7 +43,6 @@ set_target_properties(NXV_Static_Library PROPERTIES
 # This is an ugly hack to work around the fact that the default
 # cmake HDF5 library search thing does not set this variable though
 # says it does.
-set(HDF5_HL_LIBRARIES "/usr/pkg/lib/libhdf5_hl.dylib")
 
 target_link_libraries(NXV_Static_Library
  ${HDF5_LIBRARIES} ${HDF5_HL_LIBRARIES} ${LIBXML2_LIBRARIES})

@@ -137,7 +137,7 @@ static hid_t findGroup(pNXVcontext self, hid_t parentGroup, xmlNodePtr groupNode
 	xmlChar *name = NULL, *nxClass = NULL, *nodePath = NULL;
 	xmlNodePtr cur = NULL;
 	findByClassData fbcd;
-	hid_t gid;
+	hid_t gid, status;
 	hsize_t idx = 0;
 
   name = xmlGetProp(groupNode,(xmlChar *)"name");
@@ -155,11 +155,13 @@ static hid_t findGroup(pNXVcontext self, hid_t parentGroup, xmlNodePtr groupNode
 	}
 	if(name != NULL){
 		if(H5LTpath_valid(parentGroup,(char *)name, 1)){
-			return H5Gopen(parentGroup,(char *)name,H5P_DEFAULT);
+			status = H5Gopen(parentGroup,(char *)name,H5P_DEFAULT);
 		} else {
-			return -1;
+			status =  -1;
 		}
-	}
+		xmlFree(name);
+		return status;
+	} 
 
 	/*
 		no name to be found: search by type
@@ -183,8 +185,11 @@ static hid_t findGroup(pNXVcontext self, hid_t parentGroup, xmlNodePtr groupNode
 	if(fbcd.name != NULL){
 		gid = H5Gopen(parentGroup,fbcd.name,H5P_DEFAULT);
 		free(fbcd.name);
+		xmlFree(fbcd.nxClass);
 		return gid;
 	}
+	xmlFree(fbcd.nxClass);
+	
 
 	return -1;
 }
@@ -640,7 +645,7 @@ static herr_t SecondPassIterator(hid_t g_id,
 	/*
 		have we seen that yet?
 	*/
-	if(hash_lookup(name,spd->namesSeen) != NULL){
+	if(hash_lookup((char *)name,spd->namesSeen) != NULL){
 		return 0;
 	}
 
@@ -684,7 +689,7 @@ static herr_t SecondPassIterator(hid_t g_id,
 		H5Iget_name(dataID, fname,sizeof(fname));
 		H5Dclose(dataID);
 		NXVsetLog(spd->self,"dataPath",fname);
-		if(hash_lookup(name,spd->baseNames) == NULL){
+		if(hash_lookup((char *)name,spd->baseNames) == NULL){
 			NXVsetLog(spd->self,"sev","warnundef");
 			NXVprintLog(spd->self,"message","Unknown dataset %s found",
 			name);
@@ -818,6 +823,7 @@ int NXVvalidateGroup(pNXVcontext self, hid_t groupID,
 						}
 						hash_insert((char *)name,strdup(""),&namesSeen);
 					}
+					xmlFree(name);
 			}
 			if(xmlStrcmp(cur->name,(xmlChar *) "link") == 0){
 				name = xmlGetProp(cur,(xmlChar *)"name");

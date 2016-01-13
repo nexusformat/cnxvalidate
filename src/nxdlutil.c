@@ -204,6 +204,7 @@ static void mergeInheritance(pNXVcontext self)
 
 	if(xmlStrcmp(attr,(xmlChar *)"NXobject") == 0) {
 		/* nothing to do */
+	        xmlFree(attr);
 		return;
 	}
 
@@ -214,6 +215,7 @@ static void mergeInheritance(pNXVcontext self)
 
 	snprintf(fullNXDLName, sizeof(fullNXDLName),"%s.nxdl.xml",
 		(char *)attr);
+        xmlFree(attr);
 	baseClassData = self->nxdlRetriever(fullNXDLName,self->retrieverUserData);
 	if(baseClassData == NULL){
 		NXVsetLog(self,"sev","error");
@@ -260,6 +262,7 @@ int NXVloadAppDef(pNXVcontext self, char *nxdlFile)
 		NXVsetLog(self,"sev","fatal");
 		NXVsetLog(self,"message","Failed to load application definition");
 		NXVlog(self);
+		free(xmlData);
 		self->errCount++;
 		return 1;
 	}
@@ -276,6 +279,7 @@ int NXVloadAppDef(pNXVcontext self, char *nxdlFile)
 		NXVsetLog(self,"message","Failed to parse application definition");
 		NXVlog(self);
 		self->errCount++;
+		free(xmlData);
 		return 1;
 	}
 
@@ -285,7 +289,8 @@ int NXVloadAppDef(pNXVcontext self, char *nxdlFile)
 		This is for debugging the inheritance merging
 		comment out in production
 		*/
-	xmlSaveFormatFile("debugxml.xml",self->nxdlDoc,1);
+  /* xmlSaveFormatFile("debugxml.xml",self->nxdlDoc,1); */
+	free(xmlData);
 	return 0;
 }
 /*----------------------------------------------------------------*/
@@ -372,14 +377,14 @@ void NXVloadBaseClass(pNXVcontext self,
 		if(xmlStrcmp(cur->name,(xmlChar *)"group") == 0){
 			data = xmlGetProp(cur,(xmlChar *)"type");
 			if(data != NULL){
-				hash_insert(data,strdup(""),baseNames);
+				hash_insert(data,strdup("xxx"),baseNames);
 				xmlFree(data);
 			}
 		}
 		if(xmlStrcmp(cur->name,(xmlChar *)"field") == 0){
 			data = xmlGetProp(cur,(xmlChar *)"name");
 			if(data != NULL){
-				hash_insert(data,strdup(""),baseNames);
+				hash_insert(data,strdup("xxx"),baseNames);
 				xmlFree(data);
 			}
 		}

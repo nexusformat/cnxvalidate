@@ -18,7 +18,7 @@
 static void defaultLogPrint(char *key, void *data)
 {
 	if(strchr((char *)data, ' ') != NULL){
-		fprintf(stdout,"%s=\“%s\" ", key, (char *)data);
+		fprintf(stdout,"%s=\"%s\" ", key, (char *)data);
 	} else {
 		fprintf(stdout,"%s=%s ", key, (char *)data);
 	}
@@ -110,7 +110,7 @@ static char *NXVdefaultRetriever(char *appDef, void *userData)
 	return NULL;
 }
 /*------------------------------------------------------------------*/
-pNXVcontext NXVinit(char *nxdlDir)
+pNXVcontext NXVinit(const char *nxdlDir)
 {
 	pNXVcontext self = NULL;
 
@@ -121,7 +121,7 @@ pNXVcontext NXVinit(char *nxdlDir)
 	memset(self, 0, sizeof(struct __NXVContext));
 	self->logger = NXVdefaultLogger;
 	self->nxdlRetriever = NXVdefaultRetriever;
-	self->retrieverUserData = nxdlDir;
+	self->retrieverUserData = (char *)nxdlDir;
 	hash_construct_table(&self->logData,50);
 	hash_construct_table(&self->dimSymbols,20);
 	return self;

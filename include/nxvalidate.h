@@ -23,7 +23,7 @@ typedef struct __NXVContext *pNXVcontext;
  * \return a pointer to a new validation context. Or NULL on
  * failure.
  */
-pNXVcontext NXVinit(char *nxdlDir);
+pNXVcontext NXVinit(const char *nxdlDir);
 	/*
  * NXVkill deletes a validation context created with NXVinit
  * \param self The validation context
@@ -78,8 +78,8 @@ void NXVsetNXDLRetriever(pNXVcontext self, RetrieveNXDL retriever,
 * default operation applies
 * \return 0 when validation succeeds, 1 else.
 */
-int NXVvalidate(pNXVcontext self, char *dataFile,
-								char *nxdlFile, char *path);
+int NXVvalidate(pNXVcontext self, const char *dataFile,
+                const char *nxdlFile, const char *path);
 
 #ifdef __cplusplus
 };
