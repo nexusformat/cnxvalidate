@@ -377,14 +377,14 @@ void NXVloadBaseClass(pNXVcontext self,
 		if(xmlStrcmp(cur->name,(xmlChar *)"group") == 0){
 			data = xmlGetProp(cur,(xmlChar *)"type");
 			if(data != NULL){
-				hash_insert(data,strdup("xxx"),baseNames);
+				hash_insert((char *)data,strdup("xxx"),baseNames);
 				xmlFree(data);
 			}
 		}
 		if(xmlStrcmp(cur->name,(xmlChar *)"field") == 0){
 			data = xmlGetProp(cur,(xmlChar *)"name");
 			if(data != NULL){
-				hash_insert(data,strdup("xxx"),baseNames);
+				hash_insert((char *)data,strdup("xxx"),baseNames);
 				xmlFree(data);
 			}
 		}

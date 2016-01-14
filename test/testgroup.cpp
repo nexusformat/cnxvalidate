@@ -106,3 +106,23 @@ SCENARIO("Finding a group specified by type in NXDL","[findByType]"){
     }
   }
 }
+
+SCENARIO("Flag missing elememnts in a file","[misel]"){
+  GIVEN("An initialized validation context"){
+    pNXVcontext con = NXVinit("data");
+    multimap<string,string> *testResult = prepareTest(con);
+    REQUIRE(con != NULL);
+
+    WHEN("Validating misgroup.h5"){
+      int status = NXVvalidate(con,"data/misgroup.h5", NULL, NULL);
+      THEN("Path /entry/title should flag an missing field error"){
+        REQUIRE(findMessage(testResult,"/entry/title",
+          "error","Required field missing"));
+      }
+      THEN("Path /entry should flag an missing group error"){
+        REQUIRE(findMessage(testResult,"/entry",
+          "error","Required group missing"));
+      }
+    }
+  }
+}

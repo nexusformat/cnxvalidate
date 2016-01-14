@@ -107,3 +107,26 @@ SCENARIO("Flag errors on depends_on family attributes ","[depbadatt]"){
     }
   }
 }
+SCENARIO("Flag errors when depends_on family attributes are missing","[depmisatt]"){
+  GIVEN("An initialized validation context"){
+    pNXVcontext con = NXVinit("data");
+    multimap<string,string> *testResult = prepareTest(con);
+    REQUIRE(con != NULL);
+
+    WHEN("Validating depends.h5"){
+      int status = NXVvalidate(con,"data/depends.h5", NULL, NULL);
+			THEN("Path /missatt/sample/transform/x should report missing transformation_type "){
+				REQUIRE(findMessage(testResult,"/missatt/sample/transform/x", "error",
+				"Missing attribute transformation_type"));
+			}
+			THEN("Path /badatt/sample/rotation_angle should report missing offset "){
+				REQUIRE(findMessage(testResult,"/missatt/sample/rotation_angle", "error",
+				"Missing attribute offset"));
+			}
+			THEN("Path /missatt/sample/transform/z should report missing vector"){
+				REQUIRE(findMessage(testResult,"/missatt/sample/transform/z", "error",
+				"Missing attribute vector on /missatt/sample/transform/z"));
+			}
+    }
+  }
+}

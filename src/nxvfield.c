@@ -875,7 +875,7 @@ static int findAttValidator(char *name){
 	we ignore the depends_on attributes in this general scheme for now.
 	They are checked when validating the depends_on chain
 ----------------------------------------------------------------*/
-static attIgnored(char *attribute)
+static int attIgnored(char *attribute)
 {
 	char *toIgnore[] = {"transformation_type", "vector","offset",
 	 	"depends_on",NULL};
@@ -929,7 +929,7 @@ static void validateAttributes(pNXVcontext self, hid_t fieldID,
 						NXVlog(self);
 						self->errCount++;
 					} else {
-						status = attValData[i].dataValidator(self,fieldID, data);
+						status = attValData[i].dataValidator(self,fieldID, (char *)data);
 						if(status != 1){
 							NXVsetLog(self,"sev","error");
 							NXVprintLog(self,"message",
@@ -950,7 +950,7 @@ static void validateAttributes(pNXVcontext self, hid_t fieldID,
 	while(cur != NULL){
 		if(xmlStrcmp(cur->name,(xmlChar *)"attribute") == 0){
 			name = xmlGetProp(cur,(xmlChar *)"name");
-			if(attIgnored(name)) {
+			if(attIgnored((char *)name)) {
 				continue;
 			}
 			if(!H5LTfind_attribute(fieldID,(char*)name)){
@@ -976,7 +976,8 @@ static void validateAttributes(pNXVcontext self, hid_t fieldID,
 								if(xmlStrcmp(item->name,(xmlChar *)"item") == 0){
 									data = xmlGetProp(item,(xmlChar *)"value");
 										if(data != NULL && i >= 0){
-											status = attValData[i].dataValidator(self,fieldID,data);
+											status = attValData[i].dataValidator(self,fieldID,
+																													(char *)data);
 											if(status == 1){
 												attOK = 1;
 												xmlFree(data);

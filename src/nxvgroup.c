@@ -56,7 +56,7 @@ static void validateGroupAttributes(pNXVcontext self,
 	while(cur != NULL){
 		if(xmlStrcmp(cur->name, (xmlChar *)"attribute") == 0){
 			name = xmlGetProp(cur,(xmlChar *)"name");
-			if(!H5LTfind_attribute(groupID,name)){
+			if(!H5LTfind_attribute(groupID,(char *)name)){
 					NXVsetLog(self,"sev","error");
 					NXVprintLog(self,"message","Required group attribute %s missing",
 					name);
@@ -161,7 +161,7 @@ static hid_t findGroup(pNXVcontext self, hid_t parentGroup, xmlNodePtr groupNode
 		}
 		xmlFree(name);
 		return status;
-	} 
+	}
 
 	/*
 		no name to be found: search by type
@@ -189,7 +189,7 @@ static hid_t findGroup(pNXVcontext self, hid_t parentGroup, xmlNodePtr groupNode
 		return gid;
 	}
 	xmlFree(fbcd.nxClass);
-	
+
 
 	return -1;
 }
@@ -284,7 +284,7 @@ static void validateLink(pNXVcontext self, hid_t groupID,
 		objID = H5Oopen(groupID,(char *)name,H5P_DEFAULT);
 		assert(objID >= 0); /* we just tested for existence, didn't we? */
 		memset(linkTarget,0,sizeof(linkTarget));
-		att = H5LTget_attribute_string(groupID,name,"target",linkTarget);
+		att = H5LTget_attribute_string(groupID,(char *)name,"target",linkTarget);
 		if(att < 0){
 				NXVsetLog(self,"sev","error");
 				H5Iget_name(objID,dataPath,sizeof(dataPath));

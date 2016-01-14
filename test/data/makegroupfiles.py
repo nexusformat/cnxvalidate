@@ -47,6 +47,16 @@ sample.attrs['NX_class'] = numpy.string_('NXsample')
 data = entry.create_group('wool')
 data.attrs['NX_class'] = numpy.string_('NXwool')
 
+f.close()
+
+f = h5py.File('misgroup.h5','w')
+f.attrs['file_name'] = numpy.string_('misgroup.h5')
+f.attrs['file_time'] = numpy.string_('2012-08-15T09:55:43+01:00')
+
+entry = f.create_group('entry')
+entry.attrs['NX_class'] = numpy.string_('NXentry')
+dset = entry.create_dataset('definition',(1,),dtype="S70")
+dset[0] = "NXgroup"
 
 
 f.close()

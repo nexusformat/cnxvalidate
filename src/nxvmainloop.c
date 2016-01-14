@@ -158,7 +158,7 @@ static herr_t NXVentryIterator(hid_t g_id,
 				"Cannot validate %s, no application definition",nxClass);
 				NXVlog(self);
 				H5Iget_name(g_id,nxPath,sizeof(nxPath));
-				NXVsetLog(self,"dataPath",nxPath);				
+				NXVsetLog(self,"dataPath",nxPath);
 			}
 			H5Gclose(subID);
 		}
@@ -289,6 +289,14 @@ int NXVvalidate(pNXVcontext self, const char *dataFile,
 	* we have been give an explicit path to validate
 	*/
   if(path != NULL){
+		if(nxdlFile == NULL){
+			NXVsetLog(self,"sev","fatal");
+			NXVsetLog(self,"message",
+			"Need application definition parameter when validating a specific path");
+			NXVlog(self);
+			self->errCount++;
+			return 1;
+		}
     status = validatePath(self,(char *)path,(char *)nxdlFile);
 	} else {
 		/*

@@ -59,10 +59,10 @@ int main(int argc, char *argv[])
 {
 	pNXVcontext nxvContext = NULL;
   char *defDir = strdup("/Users/konnecke/src/nexus_definitions");
-	char *appDef = NULL;
+	char *appDef = NULL, *hdf5Path = NULL;
 	int warnOpt = 0, warnBase = 0, warnUndefined = 0;
   char c;
-  int status = 0;
+  int status = 0, errCount = 0, warnCount = 0;
 	PrintFilter filt;
 
 	/*
@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
 	filt.debug = 0;
 
 
-	while ((c = getopt (argc, argv, "a:l:obdut")) != -1) {
+	while ((c = getopt (argc, argv, "a:l:p:obdut")) != -1) {
     switch (c)
     {
       case 'o':
@@ -94,15 +94,19 @@ int main(int argc, char *argv[])
 				filt.warnUndefined = 1;
 				filt.warnBase = 1;
 				filt.warnOpt = 1;
+				break;
 			case 'a':
 				appDef = strdup(optarg);
 				break;
+				case 'p':
+					hdf5Path = strdup(optarg);
+					break;
 			case 'l':
 				free(defDir);
 				defDir = strdup(optarg);
 				break;
       case '?':
-        if (optopt == 'a' ||  optopt == 'l')
+        if (optopt == 'a' ||  optopt == 'l' || optopt == 'p')
           fprintf (stderr, "Option -%c requires an argument.\n", optopt);
         else if (isprint (optopt))
           fprintf (stderr, "Unknown option `-%c'.\n", optopt);
@@ -128,7 +132,14 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 	NXVsetLogger(nxvContext, FilteringLogger, &filt);
-  status =  NXVvalidate(nxvContext, argv[optind], appDef, NULL);
+  status =  NXVvalidate(nxvContext, argv[optind], appDef, hdf5Path);
+	NXVgetCounters(nxvContext, &errCount, &warnCount);
+	if(status == 0){
+		fprintf(stdout,"%s passed validation\n", argv[optind]);
+	} else {
+		fprintf(stdout,"%d errors and %d warnings found when validating %s\n",
+					errCount, warnCount, argv[optind]);
+	}
 	NXVkill(nxvContext);
 	return(status);
 }

@@ -78,12 +78,12 @@ find_package(LibXml2)
 
 # This is an ugly hack to work around the fact that the default
 # cmake HDF5 library search thing does not set this variable though
-# it says it does. This is actually a known and fixed bug in cmake 
-# and the need  for this hack will go away when cmake has been 
-# updated to a 2016 version 
+# it says it does. This is actually a known and fixed bug in cmake
+# and the need  for this hack will go away when cmake has been
+# updated to a 2016 version
 
-#set(HDF5_HL_LIBRARIES "/usr/pkg/lib/libhdf5_hl.dylib")
-set(HDF5_HL_LIBRARIES "/afs/psi.ch/project/sinq/sl6/lib/libhdf5_hl.so")
+set(HDF5_HL_LIBRARIES "/usr/pkg/lib/libhdf5_hl.dylib")
+#set(HDF5_HL_LIBRARIES "/afs/psi.ch/project/sinq/sl6/lib/libhdf5_hl.so")
 
 #--------------------------------------------------------------
 # Our own stuff, really....

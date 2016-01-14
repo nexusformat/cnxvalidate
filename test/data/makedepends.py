@@ -146,5 +146,26 @@ ds.attrs['vector'] = (1.0,0.,0.5,2.)
 transdep = f['/badatt/sample/transform/depends_on']
 transdep[0] = numpy.string_('x')
 
+# A case where various attributes are missing
+makeSkeleton('missatt')
+
+ds = f['/missatt/sample/rotation_angle']
+setCIF(ds,(0.,0.,0.),(0.,1.,0.),'rotation','transform/z')
+ds.attrs.__delitem__('offset')
+trans = f['/missatt/sample/transform']
+
+ds = trans.create_dataset('x',(1,),'f32')
+ds[0] = 122.
+setCIF(ds,(0.,0.,0.),(1.,0.,0.),'translation','/missatt/sample/rotation_angle')
+ds.attrs.__delitem__('transformation_type')
+
+ds = trans.create_dataset('z',(1,),'f32')
+ds[0] = -23.
+setCIF(ds,(0.,0.,0.),(0.,0.,1.),'translation','.')
+ds.attrs.__delitem__('vector')
+
+transdep = f['/missatt/sample/transform/depends_on']
+transdep[0] = numpy.string_('x')
+
 
 f.close()

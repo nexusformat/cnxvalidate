@@ -2,19 +2,11 @@
 NeXus validation tool written in C
 =====================================
 
-# Alpha Warning
-As of November 2015, this is an early alpha. Its mostly feature complete
-but misses a proper test suite. Which is definitely needed for this piece
-of software. You can attempt using it, but you have a good chance of it
-crashing on you or giving false results. Please report any issues with
-nxvalidate as github issues.
-
-
 # nxvalidate
 This is the first version of nxvalidate written in C. Its dependencies
-are libxml2 and the HDF5 libraries. Its purpose it to validate a NeXus file
-against a NeXus application definition. If you do not what all this is, see
-the [NeXus WWW-site](http://www.nexusformat.org).
+are libxml2 and the HDF5 libraries, ersion 1.8.9 or better. Its purpose it
+to validate a NeXus file against a NeXus application definition. If you do not
+know what all this is, see the [NeXus WWW-site](http://www.nexusformat.org).
 
 This repository holds two things:
 
@@ -44,6 +36,8 @@ All options:
 * **-l appdefdir** specifies the directory where to search for application
    definitions. As nxvalidate tries to load base calss definitions too, this must
 	 be given.
+* **-p path** specifies a path in the HDF5 file to validate. This also requires
+  an application definition to be specified with -a.
 * **-t** Produce all output possible
 * **-d** Produce debug output tracing what nxvalidate does
 * **-b** Warn about additional elements in the data file found in a base class
@@ -68,12 +62,14 @@ Currently you have to build nxvalidate from source.
 1. Download or clone the repository
 2. cd into it the source tree
 3. Create a build directory: mkdir build
-4. cd into the build diretory with cd build
-5. Run cmake: cmake ../
-6. Run make: make
+4. Edit CMakeLists.txt at the root level of the distribution. Due to a bug in
+   cmake, you have to set HDF5_HL_LIBRARIES to point to the hdf5_hl library.
+   The bug is already fixed in cmake but only very recently. Thus no one will
+   have afixed version of cmake.
+5. cd into the build diretory with cd build
+6. Run cmake: cmake ../
+7. Run make: make
+8. Run: make test
 
-This should get it done. Due to a bug in cmake, CMakeLists.txt contains an
-ugly hack which  defines symbol for setting HDF5_HL_LIBRARIES. You may need
-to edit this for your system.
-
+This should get it done.
 When this job has been finished, there may be binary builds as well.

@@ -81,6 +81,15 @@ void NXVsetNXDLRetriever(pNXVcontext self, RetrieveNXDL retriever,
 int NXVvalidate(pNXVcontext self, const char *dataFile,
                 const char *nxdlFile, const char *path);
 
+/* NXVgetCounters retrieves the number of errors and waring found in the
+ * validation run
+ * \param self the validation context
+ * \param errCount A pointer to an int variable which will be filled with the
+ *        error count
+ * \param warnCount A pointer to an int variable which will be filled with the
+ *	      warning count
+ */
+void NXVgetCounters(pNXVcontext self, int *errCount, int *warnCount);
 #ifdef __cplusplus
 };
 #endif /* __cplusplus */

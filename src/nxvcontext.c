@@ -216,3 +216,9 @@ void NXVprintLog(pNXVcontext self, char *key, char *format, ...)
 	va_end(ap);
 	NXVsetLog(self,key,buf);
 }
+/*---------------------------------------------------------------*/
+void NXVgetCounters(pNXVcontext self, int *errCount, int *warnCount)
+{
+	*errCount = self->errCount;
+	*warnCount = self->warnCount;
+}
