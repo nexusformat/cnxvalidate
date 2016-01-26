@@ -4,9 +4,9 @@ NeXus validation tool written in C
 
 # nxvalidate
 This is the first version of nxvalidate written in C. Its dependencies
-are libxml2 and the HDF5 libraries, ersion 1.8.9 or better. Its purpose it
+are libxml2 and the HDF5 libraries, version 1.8.9 or better. Its purpose is
 to validate a NeXus file against a NeXus application definition. If you do not
-know what all this is, see the [NeXus WWW-site](http://www.nexusformat.org).
+know what all this is, see the [NeXus web site](http://www.nexusformat.org).
 
 This repository holds two things:
 
