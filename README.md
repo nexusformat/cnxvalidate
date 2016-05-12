@@ -18,12 +18,12 @@ This repository holds two things:
 
 nxvalidate is invoked like this:
 
-    nxvvalidate -a appdef -l appdefdir -o -b -u -d -t datafile
+    nxvalidate -a appdef -l appdefdir -o -b -u -d -t datafile
 
 
 The minimum invocation is:
 
-    nxvvalidate -l appdefdir datafile
+    nxvalidate -l appdefdir datafile
 
 This searches for application definitions in appdefdir and validates datafile.
 It expects to find the application definition to validate from from the
