@@ -26,7 +26,7 @@
 #=============================================================================
 
 set (NXVSRC nxvmainloop.c nxvcontext.c nxvcontext.h hash.c
-  nxdlutil.c nxvgroup.c nxvfield.c)
+  nxdlutil.c nxvgroup.c nxvfield.c nxvutil.c)
 
 set (NXVLINK)
 include_directories(${HDF5_INCLUDE_DIRS} ../include ${LIBXML2_INCLUDE_DIR} )

@@ -220,7 +220,7 @@ static int validateAxes(pNXVcontext self, hid_t fieldID)
 	memset(fname,0,sizeof(fname));
 	memset(axesData,0,sizeof(axesData));
 	H5Iget_name(fieldID,fname,sizeof(fname));
-	H5LTget_attribute_string(self->fileID,fname,"axes",axesData);
+	H5NXget_attribute_string(self->fileID,fname,"axes",axesData);
 
 	/*
 		we allow colon or komma as separators on axes
@@ -296,7 +296,7 @@ static void validateInterpretation(pNXVcontext self, hid_t fieldID)
 	memset(h5name,0,sizeof(h5name));
 	memset(attData,0,sizeof(attData));
 	H5Iget_name(fieldID,h5name,sizeof(h5name));
-	H5LTget_attribute_string(self->fileID,h5name,"interpretation",attData);
+	H5NXget_attribute_string(self->fileID,h5name,"interpretation",attData);
 	i = 0;
 	while(allowedValues[i] != NULL){
 		if(strcmp(allowedValues[i],attData) == 0){
@@ -345,7 +345,7 @@ static void validateCalibration(pNXVcontext self, hid_t fieldID)
 	memset(h5name,0,sizeof(h5name));
 	memset(attData,0,sizeof(attData));
 	H5Iget_name(fieldID,h5name,sizeof(h5name));
-	H5LTget_attribute_string(self->fileID,h5name,"calibration_status",attData);
+	H5NXget_attribute_string(self->fileID,h5name,"calibration_status",attData);
 	i = 0;
 	while(allowedValues[i] != NULL){
 		if(strcmp(allowedValues[i],attData) == 0){
@@ -677,7 +677,7 @@ static int AxisValidator(pNXVcontext self, hid_t fieldID,
 		or strings
 	*/
 	if(h5class == H5T_STRING){
-		H5LTget_attribute_string(self->fileID,h5name,"axis",h5value);
+		H5NXget_attribute_string(self->fileID,h5name,"axis",h5value);
 		if(strcmp(h5value,testValue) == 0){
 			return 1;
 		} else {
@@ -712,7 +712,7 @@ static int AxesValidator(pNXVcontext self, hid_t fieldID,
 	memset(h5name,0,sizeof(h5name));
 
 	H5Iget_name(fieldID,h5name,sizeof(h5name));
-	H5LTget_attribute_string(self->fileID,h5name,"axes",h5value);
+	H5NXget_attribute_string(self->fileID,h5name,"axes",h5value);
 	if(strcmp(h5value,testValue) == 0){
 			return 1;
 	} else {
@@ -758,7 +758,7 @@ static int SignalValidator(pNXVcontext self, hid_t fieldID,
 		or strings
 	*/
 	if(h5class == H5T_STRING){
-		H5LTget_attribute_string(self->fileID,h5name,"signal",h5value);
+		H5NXget_attribute_string(self->fileID,h5name,"signal",h5value);
 		if(strcmp(h5value,testValue) == 0){
 			return 1;
 		} else {
@@ -814,7 +814,7 @@ static int PrimaryValidator(pNXVcontext self, hid_t fieldID,
 		or strings
 	*/
 	if(h5class == H5T_STRING){
-		H5LTget_attribute_string(self->fileID,h5name,"primary",h5value);
+		H5NXget_attribute_string(self->fileID,h5name,"primary",h5value);
 		if(strcmp(h5value,testValue) == 0){
 			return 1;
 		} else {
@@ -842,7 +842,7 @@ static int TransformationValidator(pNXVcontext self, hid_t fieldID,
 
 	H5Iget_name(fieldID,h5name,sizeof(h5name));
 
-	status = H5LTget_attribute_string(self->fileID,h5name,
+	status = H5NXget_attribute_string(self->fileID,h5name,
 			"transformation_type",h5value);
 	if(status >= 0){
 				if(strcmp(h5value,testValue) == 0){

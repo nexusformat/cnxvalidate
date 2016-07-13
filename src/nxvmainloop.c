@@ -50,7 +50,7 @@ static int validateFileAttributes(pNXVcontext self, hid_t fileID)
 	memset(data,0,sizeof(data));
 
 	NXVsetLog(self,"dataPath","/");
-	attID = H5LTget_attribute_string(fileID,"/","file_name",data);
+	attID = H5NXget_attribute_string(fileID,"/","file_name",data);
 	if(attID < 0){
 		NXVsetLog(self,"sev","error");
 		NXVsetLog(self,"message","Missing required global file_name attribute");
@@ -58,7 +58,7 @@ static int validateFileAttributes(pNXVcontext self, hid_t fileID)
 		self->errCount++;
 	}
 
-	attID = H5LTget_attribute_string(fileID,"/","file_time",data);
+	attID = H5NXget_attribute_string(fileID,"/","file_time",data);
 	if(attID < 0){
 		NXVsetLog(self,"sev","error");
 		NXVsetLog(self,"message","Missing required global file_time attribute");
@@ -141,7 +141,7 @@ static herr_t NXVentryIterator(hid_t g_id,
 
 	H5Oget_info_by_name(g_id, name, &obj_info,H5P_DEFAULT);
 	if(obj_info.type == H5O_TYPE_GROUP){
-		attrID = H5LTget_attribute_string(g_id,name,
+		attrID = H5NXget_attribute_string(g_id,name,
 			"NX_class", nxClass);
 		if(attrID >= 0 && strcmp(nxClass,"NXsubentry") == 0)	{
 			subID = H5Gopen(g_id,name,H5P_DEFAULT);
@@ -184,7 +184,7 @@ static herr_t NXVrootIterator(hid_t g_id,
 		  /*
 			  work the NX_class attribute
 		  */
-			attrID = H5LTget_attribute_string(g_id,name,
+			attrID = H5NXget_attribute_string(g_id,name,
 				"NX_class", nxClass);
 			if(attrID < 0){
 					NXVsetLog(self,"sev","info");

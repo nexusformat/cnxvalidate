@@ -107,7 +107,7 @@ SCENARIO("Finding a group specified by type in NXDL","[findByType]"){
   }
 }
 
-SCENARIO("Flag missing elememnts in a file","[misel]"){
+SCENARIO("Flag missing elements in a file","[misel]"){
   GIVEN("An initialized validation context"){
     pNXVcontext con = NXVinit("data");
     multimap<string,string> *testResult = prepareTest(con);

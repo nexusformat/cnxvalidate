@@ -26,7 +26,7 @@ static void validateGroupAttributes(pNXVcontext self,
 	H5Iget_name(groupID,gname,sizeof(gname));
 
 	type = xmlGetProp(groupNode,(xmlChar *)"type");
-	attID = H5LTget_attribute_string(groupID,gname,"NX_class",data);
+	attID = H5NXget_attribute_string(groupID,gname,"NX_class",data);
 	if(attID < 0){
 		NXVsetLog(self,"sev","error");
 		NXVsetLog(self,"message","Required group attribute NX_class missing");
@@ -114,7 +114,7 @@ static int FindByClassIterator(hid_t groupID,
 			/*
 				work the NX_class attribute
 			*/
-			attrID = H5LTget_attribute_string(groupID,name,
+			attrID = H5NXget_attribute_string(groupID,name,
 				"NX_class", nxClass);
 			if(attrID >= 0){
 				if(strcmp(nxClass,fbcb->nxClass) == 0){
@@ -215,7 +215,7 @@ static void validateLinkTarget(pNXVcontext self, xmlChar *target,
 	pClass = strrchr(nxdlTarget,'/');
 	while(pClass != NULL && strlen(pClass) > 1){
 		memset(data,0,sizeof(data));
-		attID = H5LTget_attribute_string(self->fileID,hdfTarget,"NX_class",data);
+		attID = H5NXget_attribute_string(self->fileID,hdfTarget,"NX_class",data);
 		if(attID < 0){
 			free(nxdlTarget);
 			NXVsetLog(self,"sev","error");
@@ -284,7 +284,7 @@ static void validateLink(pNXVcontext self, hid_t groupID,
 		objID = H5Oopen(groupID,(char *)name,H5P_DEFAULT);
 		assert(objID >= 0); /* we just tested for existence, didn't we? */
 		memset(linkTarget,0,sizeof(linkTarget));
-		att = H5LTget_attribute_string(groupID,(char *)name,"target",linkTarget);
+		att = H5NXget_attribute_string(groupID,(char *)name,"target",linkTarget);
 		if(att < 0){
 				NXVsetLog(self,"sev","error");
 				H5Iget_name(objID,dataPath,sizeof(dataPath));
@@ -471,7 +471,7 @@ static void validateDependsOnAttributes(pNXVcontext self,hid_t dpField)
 			NXVlog(self);
 			self->errCount++;
 		} else {
-			H5LTget_attribute_string(self->fileID, fname,
+			H5NXget_attribute_string(self->fileID, fname,
 					"transformation_type",transData);
 			if(strcmp(transData,"translation") != 0
 				&& strcmp(transData,"rotation") != 0){
@@ -538,7 +538,7 @@ static void validateDependsOnField(pNXVcontext self,
 			NXVlog(self);
 			self->errCount++;
 		} else {
-			H5LTget_attribute_string(self->fileID, fname,
+			H5NXget_attribute_string(self->fileID, fname,
 					"depends_on",transData);
 			if(strcmp(transData,".") == 0){
 				H5Dclose(dpFieldID);
@@ -659,7 +659,7 @@ static herr_t SecondPassIterator(hid_t g_id,
 		NXVsetLog(spd->self,"dataPath",fname);
 		if(H5LTfind_attribute(groupID,"NX_class") == 1){
 			memset(nxClass,0,sizeof(nxClass));
-			H5LTget_attribute_string(g_id,name,
+			H5NXget_attribute_string(g_id,name,
 			"NX_class", nxClass);
 			if(hash_lookup(nxClass,spd->baseNames) == NULL){
 				NXVsetLog(spd->self,"sev","warnundef");

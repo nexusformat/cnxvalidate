@@ -324,3 +324,21 @@ SCENARIO("Testing recursion through file","[recu]"){
     }
   }
 }
+
+SCENARIO("Validate a file with a variable length NX_class attribute","[var]"){
+  GIVEN("An initialized validation context"){
+    pNXVcontext con = NXVinit("data");
+    multimap<string,string> *testResult = prepareTest(con);
+    REQUIRE(con != NULL);
+
+    WHEN("Validating writer_2.1.hdf5 "){
+      int status = NXVvalidate(con,"data/writer_2.1.hdf5",
+        NULL, NULL);
+
+      THEN("Path /entry should have no No NX_class attribute error"){
+        REQUIRE(!findMessage(testResult, "/entry","debug",
+          "No NX_class attribute"));
+      }
+    }
+  }
+}
