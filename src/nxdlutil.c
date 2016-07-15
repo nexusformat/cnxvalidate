@@ -242,6 +242,7 @@ static void mergeInheritance(pNXVcontext self)
 	mergeInheritance(self);
 
 }
+#include "minimal.c"
 /*--------------------------------------------------------------*/
 int NXVloadAppDef(pNXVcontext self, char *nxdlFile)
 {
@@ -257,7 +258,11 @@ int NXVloadAppDef(pNXVcontext self, char *nxdlFile)
 		pPtr = nxdlFile;
 	}
 
-  xmlData = self->nxdlRetriever(pPtr,self->retrieverUserData);
+	if(strstr(pPtr,"NXminimal") == NULL){
+	  xmlData = self->nxdlRetriever(pPtr,self->retrieverUserData);
+	} else {
+	  xmlData = strdup(xmlMinimal);
+	}
 	if(xmlData == NULL){
 		NXVsetLog(self,"sev","fatal");
 		NXVsetLog(self,"message","Failed to load application definition");

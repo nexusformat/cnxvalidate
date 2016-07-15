@@ -44,11 +44,9 @@ herr_t H5NXget_attribute_string( hid_t loc_id, const char *obj_name, const char 
 	This is a memory issue waiting to happen. IMHO, there is a design issue with 
 	H5LTget_attribute_string in itself that it does not pass in the length of the 
 	string. Thus no check can be performed. 
-
-        There is also a mmeory leak with varData. However, if I call the reclaim function 
-        from the HDF5 API on it, I get a core dump.....
       */
       strcpy(data,varData);
+      H5Dvlen_reclaim(attr_type, space, H5P_DEFAULT, &varData);
     } else {
       result = H5Aread(attr_id,attr_type,data);
     }

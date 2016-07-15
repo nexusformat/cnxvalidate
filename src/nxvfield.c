@@ -1060,3 +1060,49 @@ int NXVvalidateField(pNXVcontext self, hid_t fieldID,
 	self->nxdlPath = myPath;
 	return 0;
 }
+/*-----------------------------------------------------------------------*/
+void validateBaseClassField(pNXVcontext self, hid_t groupID, hid_t dataID)
+{
+  char fName[512];
+  
+  H5Iget_name(dataID,fName,sizeof(fName));
+  NXVsetLog(self,"sev","debug");
+  NXVsetLog(self,"message","Validating field");
+  NXVsetLog(self,"dataPath",fName);
+  NXVlog(self);
+
+  validateDataOffsetStride(self, dataID);
+  validateAxes(self, dataID); 
+  validateInterpretation(self,dataID);
+  validateCalibration(self,dataID);
+
+  if(H5LTfind_attribute(dataID,"depends_on") == 1){
+    validateDependsOn(self,groupID,dataID);
+  }
+
+  if(H5LTfind_attribute(dataID,"axis") == 1 &&
+      testAttType(dataID,"axis",H5T_INTEGER) == 0 &&
+     testAttType(dataID,"axis",H5T_STRING) == 0){
+    NXVsetLog(self,"sev","error");
+    NXVprintLog(self,"message","Attribute %s to %s has wrong type", "axis",fName);
+    NXVlog(self);
+  }
+
+  if(H5LTfind_attribute(dataID,"signal") == 1 &&
+      testAttType(dataID,"signal",H5T_INTEGER) == 0 &&
+     testAttType(dataID,"signal",H5T_STRING) == 0){
+    NXVsetLog(self,"sev","error");
+    NXVprintLog(self,"message","Attribute %s to %s has wrong type", "signal",fName);
+    NXVlog(self);
+  }
+  
+  if(H5LTfind_attribute(dataID,"primary") == 1 &&
+      testAttType(dataID,"primary",H5T_INTEGER) == 0 &&
+     testAttType(dataID,"primary",H5T_STRING) == 0){
+    NXVsetLog(self,"sev","error");
+    NXVprintLog(self,"message","Attribute %s to %s has wrong type", "primary",fName);
+    NXVlog(self);
+  }
+
+}
+

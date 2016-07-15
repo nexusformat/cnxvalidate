@@ -560,7 +560,7 @@ static void validateDependsOnField(pNXVcontext self,
 	}
 }
 /*--------------------------------------------------------------*/
-static void validateDependsOn(pNXVcontext self, hid_t groupID,
+void validateDependsOn(pNXVcontext self, hid_t groupID,
 	hid_t fieldID)
 {
 	char fname[512], dpData[1024];
@@ -632,6 +632,48 @@ typedef struct {
 	hash_table *baseNames;
 	pNXVcontext self;
 } SecondPassData;
+/*------------------ forward declaration ----------------------------*/
+static herr_t SecondPassIterator(hid_t g_id,
+		const char *name,
+				 const H5L_info_t *info, void *op_data);
+
+/*--------------------------------------------------------------*/
+static void validateBaseClassGroup(pNXVcontext self, hid_t group_id, char *baseClass)
+{
+  SecondPassData spd;
+  char *oldNXDLPath;
+  char myNXDLPath[512], fName[1024];
+  hash_table namesSeen, baseNames;
+  hsize_t idx = 0;
+
+  oldNXDLPath = self->nxdlPath;
+  snprintf(myNXDLPath,sizeof(myNXDLPath),"/BASE/%s", baseClass);
+  self->nxdlPath = myNXDLPath;
+  NXVsetLog(self,"nxdlPath", myNXDLPath);
+
+  H5Iget_name(group_id,fName,sizeof(fName));
+  NXVsetLog(self,"sev","debug");
+  NXVsetLog(self,"dataPath",fName);
+  NXVsetLog(self,"message","Validating group against base class");
+  NXVlog(self);		
+  
+  hash_construct_table(&baseNames,100);
+  hash_construct_table(&namesSeen,2);
+  NXVloadBaseClass(self,&baseNames,baseClass);
+  spd.baseNames = &baseNames;
+  spd.namesSeen = &namesSeen;
+  spd.self = self;
+  H5Literate(group_id, H5_INDEX_NAME, H5_ITER_INC, &idx,
+	     SecondPassIterator, &spd);
+
+  /*
+    clean up
+  */
+  hash_free_table(&namesSeen,free);
+  hash_free_table(&baseNames,free);
+  self->nxdlPath = oldNXDLPath;
+  NXVsetLog(self,"nxdlPath", oldNXDLPath);
+}
 /*--------------------------------------------------------------*/
 static herr_t SecondPassIterator(hid_t g_id,
 		const char *name,
@@ -667,6 +709,7 @@ static herr_t SecondPassIterator(hid_t g_id,
 					name, nxClass);
 				NXVlog(spd->self);
 				spd->self->warnCount++;
+				validateBaseClassGroup(spd->self, groupID, nxClass);
 			} else {
 				NXVsetLog(spd->self,"sev","warnbase");
 				NXVprintLog(spd->self,"message",
@@ -674,6 +717,7 @@ static herr_t SecondPassIterator(hid_t g_id,
 					name, nxClass);
 				NXVlog(spd->self);
 				spd->self->warnCount++;
+				validateBaseClassGroup(spd->self, groupID, nxClass);
 			}
 		} else {
 			NXVsetLog(spd->self,"sev","warnundef");
@@ -687,7 +731,6 @@ static herr_t SecondPassIterator(hid_t g_id,
 	} else if (obj_info.type == H5O_TYPE_DATASET) {
 		dataID = H5Dopen(g_id,name,H5P_DEFAULT);
 		H5Iget_name(dataID, fname,sizeof(fname));
-		H5Dclose(dataID);
 		NXVsetLog(spd->self,"dataPath",fname);
 		if(hash_lookup((char *)name,spd->baseNames) == NULL){
 			NXVsetLog(spd->self,"sev","warnundef");
@@ -701,7 +744,10 @@ static herr_t SecondPassIterator(hid_t g_id,
 			name);
 			NXVlog(spd->self);
 			spd->self->warnCount++;
+			validateBaseClassField(spd->self, g_id, dataID);
+
 		}
+		H5Dclose(dataID);
 	}
 
 	return 0;

@@ -68,9 +68,9 @@ int main(int argc, char *argv[])
 	/*
 		should all be 0 in production
 	*/
-	filt.warnOpt = 1;
-	filt.warnBase = 1;
-	filt.warnUndefined = 1;
+	filt.warnOpt = 0;
+	filt.warnBase = 0;
+	filt.warnUndefined = 0;
 	filt.debug = 0;
 
 

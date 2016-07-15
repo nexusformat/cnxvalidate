@@ -78,3 +78,15 @@ int testISO8601(char *date);
  * strings are not properly read by this HDF5 function. Implemented in nxvutil.c 
  */
 herr_t H5NXget_attribute_string( hid_t loc_id, const char *obj_name, const char *attr_name,  char *data );
+
+/*
+ * validate a base class filed as fas as this is possible. Implemented in nxvfield.c
+ */
+void validateBaseClassField(pNXVcontext self, hid_t groupID, hid_t dataID);
+
+/*
+  validation of the depends_on chain. In nxvgroup.c
+*/
+void validateDependsOn(pNXVcontext self, hid_t groupID,
+		       hid_t fieldID);
+

@@ -82,7 +82,7 @@ static int validatePath(pNXVcontext self, char *path, char *rawNxdlFile)
 	hid_t groupID;
 	xmlNodePtr groupNode = NULL;
 	char nxdlFile[512];
-
+	
 	/*
 		first fix the appDef: the nxdl.xml postfix may be missing
 	*/
@@ -195,7 +195,7 @@ static herr_t NXVrootIterator(hid_t g_id,
 					if(strcmp(nxClass,"NXentry") != 0){
 						NXVsetLog(self,"sev","error");
 						NXVprintLog(self,"dataPath","/%s",name);
-            NXVprintLog(self,"message",
+						NXVprintLog(self,"message",
 							"Wrong root group class %s, expected NXentry",nxClass);
 						NXVlog(self);
 					}
@@ -241,10 +241,11 @@ static herr_t NXVrootIterator(hid_t g_id,
 					NXVsetLog(self,"sev","error");
 					NXVprintLog(self,"dataPath","/%s",name);
 					NXVprintLog(self,"message",
-						"Cannot validate %s, failed to find application definition",
+						"No application definition found for %s, continuing with NXminimal",
 						name);
 					self->errCount++;
-					NXVlog(self);
+				    	NXVlog(self);
+					validatePath(self,nxPath,"NXminimal");
 				}
 			}
 
