@@ -23,7 +23,7 @@ This overrides everything and cnxvalidate will validate the specified path
 against the specified application definition.
 
 The user has specified an application definition. Then cnxvalidate will search
-all NXentry at root level and valöidate them against the application definition.
+all NXentry at root level and validate them against the application definition.
 
 The user has specified nothing and cnxvalidate has to find its way round the
 file itself. The following pseudocode is run:
