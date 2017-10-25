@@ -122,7 +122,7 @@ int main(int argc, char *argv[])
 
 	if(argc <= optind){
 		fprintf(stderr,"ERROR: no data file to validate specified\n");
-		fprintf(stderr,"Usage:\n\tnxvvalidate -a appdef -l appdefdir -o -b -u -d -t datafile\n");
+		fprintf(stderr,"Usage:\n\tnxvvalidate -a appdef -l appdefdir -p pathtovalidate -o -b -u -d -t datafile\n");
 		exit(1);
 	}
 

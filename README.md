@@ -18,7 +18,7 @@ This repository holds two things:
 
 nxvalidate is invoked like this:
 
-    nxvalidate -a appdef -l appdefdir -o -b -u -d -t datafile
+    nxvalidate -a appdef -l appdefdir -p path  -o -b -u -d -t datafile
 
 
 The minimum invocation is:

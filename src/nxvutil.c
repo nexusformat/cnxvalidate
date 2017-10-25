@@ -1,6 +1,6 @@
 /**
  * This file contains some uitility functions for use within cnxvalidate. 
- * As of now, only the string attribute reaidng function
+ * As of now, only the string attribute reading function
  *
  * Mark Koennecke, mark.koennecke@psi.ch, July 2016
  */

@@ -951,6 +951,7 @@ static void validateAttributes(pNXVcontext self, hid_t fieldID,
 		if(xmlStrcmp(cur->name,(xmlChar *)"attribute") == 0){
 			name = xmlGetProp(cur,(xmlChar *)"name");
 			if(attIgnored((char *)name)) {
+			   cur = cur->next;
 				continue;
 			}
 			if(!H5LTfind_attribute(fieldID,(char*)name)){
