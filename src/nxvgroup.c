@@ -594,7 +594,7 @@ static void validateDependsOn(pNXVcontext self, hid_t groupID,
 	/*
 		read the field
 	*/
-	H5LTread_dataset_string(groupID,"depends_on",dpData);
+	H5NXread_dataset_string(groupID,"depends_on",dpData);
 
 	/*
 		find the field and start iterating through the chain

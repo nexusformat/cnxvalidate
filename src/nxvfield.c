@@ -53,7 +53,7 @@ static void validateData(pNXVcontext self, hid_t fieldID,
 	memset(fname,0,sizeof(fname));
 	memset(textData,0,sizeof(textData));
 	H5Iget_name(fieldID, fname, sizeof(fname));
-	H5LTread_dataset_string(self->fileID,fname,textData);
+	H5NXread_dataset_string(self->fileID,fname,textData);
 
 	cur = enumNode->xmlChildrenNode;
 	while(cur != 0){
@@ -599,7 +599,7 @@ static void validateType(pNXVcontext self, hid_t fieldID,
 				memset(dataName,0,sizeof(dataName));
 				H5Iget_name(fieldID,dataName,sizeof(dataName));
 				memset(data,0,sizeof(data));
-				H5LTread_dataset_string(self->fileID,dataName,data);
+				H5NXread_dataset_string(self->fileID,dataName,data);
 				if(!testISO8601(data)){
 					NXVsetLog(self,"sev","error");
 					NXVsetLog(self,"message","Date/Time not in ISO8601 format");

@@ -145,7 +145,7 @@ static herr_t NXVentryIterator(hid_t g_id,
 			"NX_class", nxClass);
 		if(attrID >= 0 && strcmp(nxClass,"NXsubentry") == 0)	{
 			subID = H5Gopen(g_id,name,H5P_DEFAULT);
-			defID = H5LTread_dataset_string (subID,
+			defID = H5NXread_dataset_string (subID,
 				 "definition", definition );
 			H5Iget_name(subID,nxPath,sizeof(nxPath));
 			if(defID >= 0){
@@ -225,7 +225,7 @@ static herr_t NXVrootIterator(hid_t g_id,
 				self->errCount++;
 				return 0;
 			}
-			defID = H5LTread_dataset_string (entryID,
+			defID = H5NXread_dataset_string (entryID,
 				 "definition", definition );
 			if(defID >= 0){
 				validatePath(self,nxPath,definition);
