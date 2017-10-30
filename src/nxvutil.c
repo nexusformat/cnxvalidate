@@ -9,7 +9,8 @@
 #include <hdf5_hl.h>
 #include <string.h>
 
-herr_t H5NXget_attribute_string( hid_t loc_id, const char *obj_name, const char *attr_name,  char *data )
+herr_t H5NXget_attribute_string( hid_t loc_id, const char *obj_name, const char *attr_name,
+				 char *data, size_t datalen )
 {
     /* identifiers */
     hid_t      obj_id;
@@ -41,19 +42,16 @@ herr_t H5NXget_attribute_string( hid_t loc_id, const char *obj_name, const char 
       result = H5Aread(attr_id, btype, &varData);
       H5Tclose(btype);
       /*
-	This is a memory issue waiting to happen. IMHO, there is a design issue with 
-	H5LTget_attribute_string in itself that it does not pass in the length of the 
-	string. Thus no check can be performed. 
-
-        There is also a mmeory leak with varData. However, if I call the reclaim function 
+        There is a memory leak with varData here. However, if I call the reclaim function 
         from the HDF5 API on it, I get a core dump.....
       */
-      strcpy(data,varData);
+      strncpy(data,varData,datalen-1);
     } else {
       result = H5Aread(attr_id,attr_type,data);
     }
 
     H5Tclose(attr_type);
+    
     H5Sclose(space);
     H5Aclose(attr_id);
     H5Oclose(obj_id);
@@ -67,10 +65,11 @@ herr_t H5NXget_attribute_string( hid_t loc_id, const char *obj_name, const char 
 
 herr_t H5NXread_dataset_string( hid_t loc_id,
                                const char *dset_name,
-                               char *buf )
+				char *buf, size_t buflen )
 {
     hid_t   did = -1;
     hid_t   tid = -1;
+    hid_t   sid;
     H5T_class_t tclass;
     char **vstrdata;
     hid_t memtype_id;
@@ -88,18 +87,20 @@ herr_t H5NXread_dataset_string( hid_t loc_id,
 
     tclass = H5Tget_class(tid);
     if(H5Tis_variable_str(tid)) {
-      /*
-	This is a horrible cludge and may (will) cause memory issues. 
-        Memory from reading the variable length string is not properly freed
-        Copying the variable length data without length protection can cause 
-        memory corruption if the space in buf is to small. But the length is not passed        in as a parameter... 
-       */
       vstrdata = malloc(sizeof(char *));
       memtype_id = H5Tcopy(H5T_C_S1);
       H5Tset_size(memtype_id,H5T_VARIABLE);
       H5Dread(did,memtype_id,H5S_ALL,H5S_ALL,H5P_DEFAULT,vstrdata);
       buf[0] = '\0';
-      strcpy(buf,vstrdata[0]);
+       /*
+	 This will also only work for single variable length strings and not arrays of them. 
+
+       */
+      strncpy(buf,vstrdata[0],buflen-1);
+      sid =  H5Dget_space(did);
+      H5Dvlen_reclaim(memtype_id, sid, H5P_DEFAULT,
+		      vstrdata);
+      H5Dclose(sid);
       H5Tclose(memtype_id);
     } else {
       /* Read */

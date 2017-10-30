@@ -342,3 +342,25 @@ SCENARIO("Validate a file with a variable length NX_class attribute","[var]"){
     }
   }
 }
+
+SCENARIO("Validate a file with a variable length NX_class attribute and a variable length definition field","[var2]"){
+  GIVEN("An initialized validation context"){
+    pNXVcontext con = NXVinit("data");
+    multimap<string,string> *testResult = prepareTest(con);
+    REQUIRE(con != NULL);
+
+    WHEN("Validating varlen.h5 "){
+      int status = NXVvalidate(con,"data/varlen.h5",
+        NULL, NULL);
+
+      THEN("Path /entry should have no No NX_class attribute error"){
+        REQUIRE(!findMessage(testResult, "/entry","debug",
+          "No NX_class attribute"));
+      }
+      THEN("Path /entry should not report error failed to find application definition"){
+        REQUIRE(!findMessage(testResult,"/entry","error",
+        "failed to find application definition"));
+      }
+    }
+  }
+}

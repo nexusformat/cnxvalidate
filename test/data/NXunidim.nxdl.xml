@@ -46,6 +46,13 @@
               <dim index="3" value="128"/>
           </dimensions>
       </field>
+      <field name="ranksymbol" type="NX_INT">
+          <dimensions rank="rankHugo">
+              <dim index="1" value="10"/>
+              <dim index="2" value="128"/>
+              <dim index="3" value="128"/>
+          </dimensions>
+      </field>
       <field name="mismatchdim" type="NX_INT">
           <dimensions rank="3">
               <dim index="1" value="10"/>

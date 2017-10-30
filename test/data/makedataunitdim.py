@@ -16,6 +16,7 @@ dset[0] = "NXunidim"
 
 # The dimension stuff first
 dset = entry.create_dataset('gooddata',(10,128,128), dtype='i32')
+dset = entry.create_dataset('ranksymbol',(10,128,128), dtype='i32')
 dset = entry.create_dataset('mismatchdim',(11,128,129), dtype='i32')
 dset = entry.create_dataset('mismatchrank',(128,129), dtype='i32')
 dset = entry.create_dataset('defsymbol',(10,), dtype='i32')

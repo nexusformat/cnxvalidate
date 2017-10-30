@@ -53,7 +53,7 @@ static void validateData(pNXVcontext self, hid_t fieldID,
 	memset(fname,0,sizeof(fname));
 	memset(textData,0,sizeof(textData));
 	H5Iget_name(fieldID, fname, sizeof(fname));
-	H5NXread_dataset_string(self->fileID,fname,textData);
+	H5NXread_dataset_string(self->fileID,fname,textData,sizeof(textData));
 
 	cur = enumNode->xmlChildrenNode;
 	while(cur != 0){
@@ -220,7 +220,7 @@ static int validateAxes(pNXVcontext self, hid_t fieldID)
 	memset(fname,0,sizeof(fname));
 	memset(axesData,0,sizeof(axesData));
 	H5Iget_name(fieldID,fname,sizeof(fname));
-	H5NXget_attribute_string(self->fileID,fname,"axes",axesData);
+	H5NXget_attribute_string(self->fileID,fname,"axes",axesData,sizeof(axesData));
 
 	/*
 		we allow colon or komma as separators on axes
@@ -296,7 +296,7 @@ static void validateInterpretation(pNXVcontext self, hid_t fieldID)
 	memset(h5name,0,sizeof(h5name));
 	memset(attData,0,sizeof(attData));
 	H5Iget_name(fieldID,h5name,sizeof(h5name));
-	H5NXget_attribute_string(self->fileID,h5name,"interpretation",attData);
+	H5NXget_attribute_string(self->fileID,h5name,"interpretation",attData,sizeof(attData));
 	i = 0;
 	while(allowedValues[i] != NULL){
 		if(strcmp(allowedValues[i],attData) == 0){
@@ -345,7 +345,7 @@ static void validateCalibration(pNXVcontext self, hid_t fieldID)
 	memset(h5name,0,sizeof(h5name));
 	memset(attData,0,sizeof(attData));
 	H5Iget_name(fieldID,h5name,sizeof(h5name));
-	H5NXget_attribute_string(self->fileID,h5name,"calibration_status",attData);
+	H5NXget_attribute_string(self->fileID,h5name,"calibration_status",attData,sizeof(attData));
 	i = 0;
 	while(allowedValues[i] != NULL){
 		if(strcmp(allowedValues[i],attData) == 0){
@@ -396,7 +396,18 @@ static void validateDimensions(pNXVcontext self, hid_t fieldID,
 	*/
 	data = xmlGetProp(dimNode,(xmlChar *)"rank");
 	if(data != NULL){
-		nxdlRank = atoi((char *)data);
+	  if(isInteger((char *)data)) {
+	    nxdlRank = atoi((char *)data);
+	  } else {
+	    if((dimInt = (int *)hash_lookup((char *)data,&self->dimSymbols)) == NULL){
+		  dimInt = malloc(sizeof(int));
+		  *dimInt = h5rank;
+		  hash_insert((char *)data,dimInt,&self->dimSymbols);
+                  nxdlRank = h5rank;
+	    } else {
+	      nxdlRank = *dimInt;
+	    }
+	  }
 		if(nxdlRank != h5rank){
 			NXVsetLog(self,"sev","error");
 			NXVprintLog(self,"message","Rank mismatch expected %d, found %d",
@@ -599,7 +610,7 @@ static void validateType(pNXVcontext self, hid_t fieldID,
 				memset(dataName,0,sizeof(dataName));
 				H5Iget_name(fieldID,dataName,sizeof(dataName));
 				memset(data,0,sizeof(data));
-				H5NXread_dataset_string(self->fileID,dataName,data);
+				H5NXread_dataset_string(self->fileID,dataName,data,sizeof(data));
 				if(!testISO8601(data)){
 					NXVsetLog(self,"sev","error");
 					NXVsetLog(self,"message","Date/Time not in ISO8601 format");
@@ -677,7 +688,7 @@ static int AxisValidator(pNXVcontext self, hid_t fieldID,
 		or strings
 	*/
 	if(h5class == H5T_STRING){
-		H5NXget_attribute_string(self->fileID,h5name,"axis",h5value);
+	  H5NXget_attribute_string(self->fileID,h5name,"axis",h5value,sizeof(h5value));
 		if(strcmp(h5value,testValue) == 0){
 			return 1;
 		} else {
@@ -712,7 +723,7 @@ static int AxesValidator(pNXVcontext self, hid_t fieldID,
 	memset(h5name,0,sizeof(h5name));
 
 	H5Iget_name(fieldID,h5name,sizeof(h5name));
-	H5NXget_attribute_string(self->fileID,h5name,"axes",h5value);
+	H5NXget_attribute_string(self->fileID,h5name,"axes",h5value,sizeof(h5value));
 	if(strcmp(h5value,testValue) == 0){
 			return 1;
 	} else {
@@ -758,7 +769,7 @@ static int SignalValidator(pNXVcontext self, hid_t fieldID,
 		or strings
 	*/
 	if(h5class == H5T_STRING){
-		H5NXget_attribute_string(self->fileID,h5name,"signal",h5value);
+	  H5NXget_attribute_string(self->fileID,h5name,"signal",h5value,sizeof(h5value));
 		if(strcmp(h5value,testValue) == 0){
 			return 1;
 		} else {
@@ -814,7 +825,7 @@ static int PrimaryValidator(pNXVcontext self, hid_t fieldID,
 		or strings
 	*/
 	if(h5class == H5T_STRING){
-		H5NXget_attribute_string(self->fileID,h5name,"primary",h5value);
+	  H5NXget_attribute_string(self->fileID,h5name,"primary",h5value,sizeof(h5value));
 		if(strcmp(h5value,testValue) == 0){
 			return 1;
 		} else {
@@ -843,7 +854,7 @@ static int TransformationValidator(pNXVcontext self, hid_t fieldID,
 	H5Iget_name(fieldID,h5name,sizeof(h5name));
 
 	status = H5NXget_attribute_string(self->fileID,h5name,
-			"transformation_type",h5value);
+					  "transformation_type",h5value,sizeof(h5value));
 	if(status >= 0){
 				if(strcmp(h5value,testValue) == 0){
 					return 1;

@@ -35,6 +35,23 @@ SCENARIO("Testing for dimension match","[dim]"){
   }
 }
 
+SCENARIO("Testing for rank as a symbol","[rankSym]"){
+  GIVEN("An initialized validation context"){
+    pNXVcontext con = NXVinit("data");
+    multimap<string,string> *testResult = prepareTest(con);
+    REQUIRE(con != NULL);
+
+    WHEN("Validating dsunidim.h5"){
+      int status = NXVvalidate(con,"data/dsunidim.h5", NULL, NULL);
+
+      THEN("Path /entry/ranksymbol should not be in error"){
+        REQUIRE(testNoError(testResult,"/entry/ranksymbol"));
+      }
+    }
+  }
+}
+
+
 SCENARIO("Testing the use of dimension symbols","[dimsym]"){
   GIVEN("An initialized validation context"){
     pNXVcontext con = NXVinit("data");

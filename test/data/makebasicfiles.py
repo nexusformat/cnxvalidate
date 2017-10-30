@@ -113,3 +113,21 @@ dset = entry.create_dataset('title3',(1,),dtype="S70")
 dset[0] = "Level2"
 
 f.close()
+
+# A file with variable length strings as attributes and datasets
+def makeVarEntry(name,f):
+    entry = f.create_group(name)
+    entry.attrs['NX_class'] = b'NXentry'
+    dt = h5py.special_dtype(vlen=bytes)
+    dset = entry.create_dataset('definition',(1,),dtype=dt)
+    dset[0] = b"NXminimal"
+    dset = entry.create_dataset('title',(1,),dtype=dt)
+    dset[0] = b"Gewindestange"
+
+
+
+f = h5py.File('varlen.h5','w')
+f.attrs['file_name'] = numpy.string_('varlen.h5')
+f.attrs['file_time'] = numpy.string_('2012-08-15T09:55:43+01:00')
+makeVarEntry('entry',f)
+f.close()
