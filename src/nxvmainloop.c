@@ -73,6 +73,14 @@ static int validateFileAttributes(pNXVcontext self, hid_t fileID)
 			}
 	}
 
+	attID = H5NXget_attribute_string(fileID,"/","HDF5_Version",data,sizeof(data));
+	if(attID < 0){
+		NXVsetLog(self,"sev","error");
+		NXVsetLog(self,"message","Missing required global HDF5_Version attribute");
+		NXVlog(self);
+		self->errCount++;
+        }       
+
 	return 0;
 }
 /*--------------------------------------------------------------*/

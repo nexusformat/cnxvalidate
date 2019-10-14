@@ -43,6 +43,7 @@ All options:
 * **-b** Warn about additional elements in the data file found in a base class
 * **-u** Warn about undefined additional elements in the data file
 * **-o** Warn about optional elements which are not present in the datafile
+* **-e** Neaten the output with more whitespace
 
 Validation errors are always reported.
 
@@ -64,8 +65,8 @@ Currently you have to build nxvalidate from source.
 3. Create a build directory: mkdir build
 4. Edit CMakeLists.txt at the root level of the distribution. Due to a bug in
    cmake, you have to set HDF5_HL_LIBRARIES to point to the hdf5_hl library.
-   The bug is already fixed in cmake but only very recently. Thus no one will
-   have afixed version of cmake.
+   The bug is already fixed in cmake but only very recently. Thus you may not
+   have a fixed version of cmake.
 5. cd into the build diretory with cd build
 6. Run cmake: cmake ../
 7. Run make: make

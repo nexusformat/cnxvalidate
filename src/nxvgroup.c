@@ -13,6 +13,38 @@
 #include <hdf5_hl.h>
 #include <libxml/tree.h>
 
+/*--------------------------------------------------------------*/
+static int isOptional(xmlNodePtr node)
+{
+	xmlChar *min= NULL;
+        xmlChar *opt= NULL;
+        xmlChar *name= NULL;
+	int num;
+	int istrue;
+
+	min = xmlGetProp(node,(xmlChar *)"minOccurs");
+	opt = xmlGetProp(node,(xmlChar *)"optional");
+	name = xmlGetProp(node,(xmlChar *)"name");       
+
+	if(min == NULL && opt == NULL){
+		return 0;
+	}
+	if(min != NULL) {
+	  num = atoi((char *)min);
+	  if(num == 0){
+		return 1;
+	  } else {
+		return 0;
+	  }
+	}
+	if(opt != NULL) {
+	  istrue = 1;
+	  if (strcmp((char *)opt,"false")==0) istrue=0;
+	  return istrue;
+	}
+	return 0;
+}
+
 static void validateGroupAttributes(pNXVcontext self,
 	hid_t groupID, xmlNodePtr groupNode)
 {
@@ -57,11 +89,19 @@ static void validateGroupAttributes(pNXVcontext self,
 		if(xmlStrcmp(cur->name, (xmlChar *)"attribute") == 0){
 			name = xmlGetProp(cur,(xmlChar *)"name");
 			if(!H5LTfind_attribute(groupID,(char *)name)){
+				if(!isOptional(cur)){
 					NXVsetLog(self,"sev","error");
 					NXVprintLog(self,"message","Required group attribute %s missing",
 					name);
 					NXVlog(self);
 					self->errCount++;
+				} else {
+					NXVsetLog(self,"sev","warnopt");
+					NXVprintLog(self,"message","Optional group attribute %s missing",
+					name);
+					NXVlog(self);
+					self->warnCount++;
+				}
 			} else {
 				/*
 					TODO validate attribute data.
@@ -72,23 +112,6 @@ static void validateGroupAttributes(pNXVcontext self,
 			xmlFree(name);
 		}
 		cur = cur->next;
-	}
-}
-/*--------------------------------------------------------------*/
-static int isOptional(xmlNodePtr node)
-{
-	xmlChar *min= NULL;
-	int num;
-
-	min = xmlGetProp(node,(xmlChar *)"minOccurs");
-	if(min == NULL){
-		return 0;
-	}
-	num = atoi((char *)min);
-	if(num == 0){
-		return 1;
-	} else {
-		return 0;
 	}
 }
 /*----------------------------------------------------------------
@@ -785,6 +808,7 @@ int NXVvalidateGroup(pNXVcontext self, hid_t groupID,
 							NXVsetLog(self,"sev","warnopt");
 							NXVsetLog(self,"message","Optional group missing");
 							NXVlog(self);
+							self->warnCount++;
 						}
 					}
 			}
@@ -803,14 +827,15 @@ int NXVvalidateGroup(pNXVcontext self, hid_t groupID,
 							"%s/%s", self->nxdlPath, name);
 						NXVsetLog(self,"nxdlPath", nxdlChildPath);
 						if(!isOptional(cur)){
-									NXVsetLog(self,"sev","error");
-									NXVsetLog(self,"message","Required field missing");
-									NXVlog(self);
-									self->errCount++;
+							NXVsetLog(self,"sev","error");
+							NXVsetLog(self,"message","Required field missing");
+							NXVlog(self);
+							self->errCount++;
 						} else {
 							NXVsetLog(self,"sev","warnopt");
 							NXVsetLog(self,"message","Optional field missing");
 							NXVlog(self);
+							self->warnCount++;
 						}
 					} else {
 						if(xmlStrcmp(name,(xmlChar *)"depends_on") == 0){
