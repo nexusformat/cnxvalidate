@@ -77,7 +77,9 @@ int findMessage(multimap<string,string> *result,
 	for(it = ret.first; it != ret.second; ++it){
 			string test = it->second;
 			string sev = "sev=" + severity;
-			if(test.find(sev,0) != string::npos &&
+			string severr = "dev=error";
+			if((test.find(sev,0) != string::npos||
+			    test.find(severr,0) != string::npos) &&
 			test.find(message,0) != string::npos){
 				return 1;
 			}

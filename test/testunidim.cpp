@@ -24,11 +24,11 @@ SCENARIO("Testing for dimension match","[dim]"){
         REQUIRE(testNoError(testResult,"/entry/gooddata"));
       }
 			THEN("Path /entry/mismatchdim should report error Dimension mismatch"){
-				REQUIRE(findMessage(testResult,"/entry/mismatchdim", "error",
+				REQUIRE(findMessage(testResult,"/entry/mismatchdim", "warnopt",
 				"Dimension mismatch on"));
 			}
 			THEN("Path /entry/mismatchrankshould report error Rank mismatch"){
-				REQUIRE(findMessage(testResult,"/entry/mismatchrank", "error",
+				REQUIRE(findMessage(testResult,"/entry/mismatchrank", "warnopt",
 				"Rank mismatch"));
 			}
     }
@@ -65,7 +65,7 @@ SCENARIO("Testing the use of dimension symbols","[dimsym]"){
         REQUIRE(testNoError(testResult,"/entry/symbolok"));
       }
 			THEN("Path /entry/symbolbad should report error Dimension mismatch"){
-				REQUIRE(findMessage(testResult,"/entry/symbolbad", "error",
+				REQUIRE(findMessage(testResult,"/entry/symbolbad", "warnopt",
 				"Dimension mismatch on"));
 			}
     }

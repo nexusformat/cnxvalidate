@@ -441,14 +441,21 @@ static void validateDimensions(pNXVcontext self, hid_t fieldID,
 	      nxdlRank = *dimInt;
 	    }
 	  }
-		if(nxdlRank != h5rank){
+		if(nxdlRank <  h5rank){
 			NXVsetLog(self,"sev","error");
 			NXVprintLog(self,"message","Rank mismatch expected %d, found %d",
 				nxdlRank, h5rank);
 			NXVlog(self);
 			self->errCount++;
 			return; /* further dimension checking makes no sense here */
-		}
+		} else if(nxdlRank >  h5rank) {
+			NXVsetLog(self,"sev","warnopt");
+			NXVprintLog(self,"message","Rank mismatch expected %d, found %d",
+				nxdlRank, h5rank);
+			NXVlog(self);
+			self->warnCount++;
+			return; /* further dimension checking makes no sense here */
+                }
 		xmlFree(data);
 	} else {
 		NXVsetLog(self,"sev","error");
@@ -480,12 +487,12 @@ static void validateDimensions(pNXVcontext self, hid_t fieldID,
 			if(isInteger((char *)val)){
 				dimVal = atoi((char *)val);
 				if(dimVal != h5dim[idx]){
-					NXVsetLog(self,"sev","error");
+					NXVsetLog(self,"sev","warnopt");
 					NXVprintLog(self,"message",
-						"Dimension mismatch on %d, should %d, is %d",
+						"Dimension mismatch on %d, should be %d, is %d",
 						idx+1, dimVal, h5dim[idx]);
 					NXVlog(self);
-					self->errCount++;
+					self->warnCount++;
 				}
 			} else {
 				if((dimInt = (int *)hash_lookup((char *)val,&self->dimSymbols)) == NULL){
@@ -494,12 +501,12 @@ static void validateDimensions(pNXVcontext self, hid_t fieldID,
 					hash_insert((char *)val,dimInt,&self->dimSymbols);
 				} else {
 					if(*dimInt != h5dim[idx]){
-						NXVsetLog(self,"sev","error");
+						NXVsetLog(self,"sev","warnopt");
 						NXVprintLog(self,"message",
-							"Dimension mismatch on %d, should %d, is %d",
+							"Dimension mismatch on %d, should be %d, is %d",
 							idx+1, *dimInt, h5dim[idx]);
 						NXVlog(self);
-						self->errCount++;
+						self->warnCount++;
 					}
 				}
 			}
@@ -974,7 +981,7 @@ static void validateAttributes(pNXVcontext self, hid_t fieldID,
 						NXVlog(self);
 						self->errCount++;
 					} else {
-						NXVsetLog(self,"sev","wantopt");
+						NXVsetLog(self,"sev","warnopt");
 						NXVprintLog(self,"message","Optional attribute %s missing",
 							attValData[i].name);
 						NXVlog(self);
