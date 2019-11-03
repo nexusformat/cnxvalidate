@@ -19,14 +19,16 @@ static int isOptional(xmlNodePtr node)
 	xmlChar *min= NULL;
         xmlChar *opt= NULL;
         xmlChar *name= NULL;
+        xmlChar *rec= NULL;
 	int num;
 	int istrue;
 
 	min = xmlGetProp(node,(xmlChar *)"minOccurs");
 	opt = xmlGetProp(node,(xmlChar *)"optional");
+	rec = xmlGetProp(node,(xmlChar *)"recommended");
 	name = xmlGetProp(node,(xmlChar *)"name");       
 
-	if(min == NULL && opt == NULL){
+	if(min == NULL && opt == NULL && rec == NULL){
 		return 0;
 	}
 	if(min != NULL) {
@@ -40,6 +42,11 @@ static int isOptional(xmlNodePtr node)
 	if(opt != NULL) {
 	  istrue = 1;
 	  if (strcmp((char *)opt,"false")==0) istrue=0;
+	  return istrue;
+	}
+	if(rec != NULL) {
+	  istrue = 1;
+	  if (strcmp((char *)rec,"false")==0) istrue=0;
 	  return istrue;
 	}
 	return 0;
