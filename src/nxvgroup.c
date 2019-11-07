@@ -632,6 +632,7 @@ static void validateDependsOn(pNXVcontext self, hid_t groupID,
 		find the field and start iterating through the chain
 	*/
 
+        if (strcmp(dpData,".")!=0) { 
 	dpfieldID = findDependentField(self,fieldID,dpData);
 	if(dpfieldID < 0){
 		NXVsetLog(self,"sev","error");
@@ -644,6 +645,7 @@ static void validateDependsOn(pNXVcontext self, hid_t groupID,
 	} else {
 		validateDependsOnField(self,groupID,dpfieldID);
 		H5Dclose(dpfieldID);
+	}
 	}
 
 }
