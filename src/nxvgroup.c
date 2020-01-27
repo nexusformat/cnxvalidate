@@ -601,20 +601,22 @@ static void validateDependsOn(pNXVcontext self, hid_t groupID,
 	/*
 		find the field and start iterating through the chain
 	*/
+        if (strcmp(dpData, ".") != 0) {
 
-	dpfieldID = findDependentField(self,fieldID,dpData);
-	if(dpfieldID < 0){
-		NXVsetLog(self,"sev","error");
-		NXVprintLog(self,"message",
-		"Cannot even find the starting point of the depends_on chain, %s",
-		dpData);
-		NXVlog(self);
-		self->errCount++;
-		return;
-	} else {
-		validateDependsOnField(self,groupID,dpfieldID);
-		H5Dclose(dpfieldID);
-	}
+                dpfieldID = findDependentField(self,fieldID,dpData);
+                if(dpfieldID < 0){
+                        NXVsetLog(self,"sev","error");
+                        NXVprintLog(self,"message",
+                        "Cannot even find the starting point of the depends_on chain, %s",
+                        dpData);
+                        NXVlog(self);
+                        self->errCount++;
+                        return;
+                } else {
+                        validateDependsOnField(self,groupID,dpfieldID);
+                        H5Dclose(dpfieldID);
+                }
+        }
 
 }
 /*---------------------------------------------------------------
