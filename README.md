@@ -44,6 +44,7 @@ All options:
 * **-u** Warn about undefined additional elements in the data file
 * **-o** Warn about optional elements which are not present in the datafile
 * **-e** Neaten the output with more whitespace
+* **-r** Process root group
 
 Validation errors are always reported.
 

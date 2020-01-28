@@ -18,7 +18,7 @@ SCENARIO("Testing for dimension match","[dim]"){
     REQUIRE(con != NULL);
 
     WHEN("Validating dsunidim.h5"){
-      int status = NXVvalidate(con,"data/dsunidim.h5", NULL, NULL);
+      int status = NXVvalidate(con,"data/dsunidim.h5", NULL, NULL, 0);
 
       THEN("Path /entry/gooddata should not be in error"){
         REQUIRE(testNoError(testResult,"/entry/gooddata"));
@@ -42,7 +42,7 @@ SCENARIO("Testing for rank as a symbol","[rankSym]"){
     REQUIRE(con != NULL);
 
     WHEN("Validating dsunidim.h5"){
-      int status = NXVvalidate(con,"data/dsunidim.h5", NULL, NULL);
+      int status = NXVvalidate(con,"data/dsunidim.h5", NULL, NULL, 0);
 
       THEN("Path /entry/ranksymbol should not be in error"){
         REQUIRE(testNoError(testResult,"/entry/ranksymbol"));
@@ -59,7 +59,7 @@ SCENARIO("Testing the use of dimension symbols","[dimsym]"){
     REQUIRE(con != NULL);
 
     WHEN("Validating dsunidim.h5"){
-      int status = NXVvalidate(con,"data/dsunidim.h5", NULL, NULL);
+      int status = NXVvalidate(con,"data/dsunidim.h5", NULL, NULL, 0);
 
       THEN("Path /entry/symbolok should not be in error"){
         REQUIRE(testNoError(testResult,"/entry/symbolok"));
@@ -79,7 +79,7 @@ SCENARIO("Testing NX_INT type checking ","[nxint]"){
     REQUIRE(con != NULL);
 
     WHEN("Validating dsunidim.h5"){
-      int status = NXVvalidate(con,"data/dsunidim.h5", NULL, NULL);
+      int status = NXVvalidate(con,"data/dsunidim.h5", NULL, NULL, 0);
 
       THEN("Path /entry/goodint should not be in error"){
         REQUIRE(testNoError(testResult,"/entry/goodint"));
@@ -99,7 +99,7 @@ SCENARIO("Testing NX_POSINT type checking ","[nxposint]"){
     REQUIRE(con != NULL);
 
     WHEN("Validating dsunidim.h5"){
-      int status = NXVvalidate(con,"data/dsunidim.h5", NULL, NULL);
+      int status = NXVvalidate(con,"data/dsunidim.h5", NULL, NULL, 0);
 
       THEN("Path /entry/goodposint should not be in error"){
         REQUIRE(testNoError(testResult,"/entry/goodposint"));
@@ -119,7 +119,7 @@ SCENARIO("Testing NX_UINT type checking ","[nxuint]"){
     REQUIRE(con != NULL);
 
     WHEN("Validating dsunidim.h5"){
-      int status = NXVvalidate(con,"data/dsunidim.h5", NULL, NULL);
+      int status = NXVvalidate(con,"data/dsunidim.h5", NULL, NULL, 0);
 
       THEN("Path /entry/gooduint should not be in error"){
         REQUIRE(testNoError(testResult,"/entry/gooduint"));
@@ -143,7 +143,7 @@ SCENARIO("Testing NX_FLOAT type checking ","[nxfloat]"){
     REQUIRE(con != NULL);
 
     WHEN("Validating dsunidim.h5"){
-      int status = NXVvalidate(con,"data/dsunidim.h5", NULL, NULL);
+      int status = NXVvalidate(con,"data/dsunidim.h5", NULL, NULL, 0);
 
       THEN("Path /entry/goodfloat should not be in error"){
         REQUIRE(testNoError(testResult,"/entry/goodfloat"));
@@ -163,7 +163,7 @@ SCENARIO("Testing NX_NUMBER type checking ","[nxnum]"){
     REQUIRE(con != NULL);
 
     WHEN("Validating dsunidim.h5"){
-      int status = NXVvalidate(con,"data/dsunidim.h5", NULL, NULL);
+      int status = NXVvalidate(con,"data/dsunidim.h5", NULL, NULL, 0);
 
       THEN("Path /entry/goodnumber should not be in error"){
         REQUIRE(testNoError(testResult,"/entry/goodnumber"));
@@ -186,7 +186,7 @@ SCENARIO("Testing NX_CHAR type checking ","[nxchar]"){
     REQUIRE(con != NULL);
 
     WHEN("Validating dsunidim.h5"){
-      int status = NXVvalidate(con,"data/dsunidim.h5", NULL, NULL);
+      int status = NXVvalidate(con,"data/dsunidim.h5", NULL, NULL, 0);
 
       THEN("Path /entry/goodtxt should not be in error"){
         REQUIRE(testNoError(testResult,"/entry/goodtxt"));
@@ -206,7 +206,7 @@ SCENARIO("Testing NX_DATE_TIME type checking ","[nxdate]"){
     REQUIRE(con != NULL);
 
     WHEN("Validating dsunidim.h5"){
-      int status = NXVvalidate(con,"data/dsunidim.h5", NULL, NULL);
+      int status = NXVvalidate(con,"data/dsunidim.h5", NULL, NULL, 0);
 
       THEN("Path /entry/goodtime with T format variant should not be in error"){
         REQUIRE(testNoError(testResult,"/entry/goodtime"));
@@ -234,7 +234,7 @@ SCENARIO("Testing NX_BINARY type checking ","[nxbin]"){
     REQUIRE(con != NULL);
 
     WHEN("Validating dsunidim.h5"){
-      int status = NXVvalidate(con,"data/dsunidim.h5", NULL, NULL);
+      int status = NXVvalidate(con,"data/dsunidim.h5", NULL, NULL, 0);
 
       THEN("Path /entry/goodbin should not be in error"){
         REQUIRE(testNoError(testResult,"/entry/goodbin"));
@@ -258,7 +258,7 @@ SCENARIO("Testing NX_BOOLEAN type checking ","[nxbool]"){
     REQUIRE(con != NULL);
 
     WHEN("Validating dsunidim.h5"){
-      int status = NXVvalidate(con,"data/dsunidim.h5", NULL, NULL);
+      int status = NXVvalidate(con,"data/dsunidim.h5", NULL, NULL, 0);
 
       THEN("Path /entry/goodbool should not be in error"){
         REQUIRE(testNoError(testResult,"/entry/goodbool"));

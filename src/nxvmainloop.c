@@ -1,5 +1,5 @@
 /**
-  * This file implement the main entry point for the validator.
+	* This file implements the main entry point for the validator.
 	* It is responsible for locating validatable content and starting
 	* the recursive validation of the data file.
 	*
@@ -38,7 +38,7 @@ int testISO8601(char *date)
 	}
 }
 /*----------------------------------------------------------------------*/
-static int validateFileAttributes(pNXVcontext self, hid_t fileID)
+static int validateFileAttributes(pNXVcontext self, hid_t fileID, const int procroot)
 {
 	herr_t attID;
 	char data[1024];
@@ -140,9 +140,9 @@ static herr_t NXVentryIterator(hid_t g_id,
 		const H5L_info_t *info, void *op_data)
 {
 	pNXVcontext self = (pNXVcontext)op_data;
-  H5O_info_t obj_info;
+	H5O_info_t obj_info;
 	hid_t attrID, defID, subID;
-  char nxClass[256], definition[1024], nxPath[512];
+	char nxClass[256], definition[1024], nxPath[512];
 
 	memset(nxClass,0,sizeof(nxClass));
 	memset(definition,0,sizeof(definition));
@@ -179,8 +179,8 @@ static herr_t NXVrootIterator(hid_t g_id,
 		const H5L_info_t *info, void *op_data)
 {
 	pNXVcontext self = (pNXVcontext)op_data;
-  H5O_info_t obj_info;
-  hid_t attrID, entryID, defID;
+	H5O_info_t obj_info;
+	hid_t attrID, entryID, defID;
 	hsize_t idx = 0;
 	char nxClass[132], nxPath[256], definition[1024];
 
@@ -203,7 +203,7 @@ static herr_t NXVrootIterator(hid_t g_id,
 					if(strcmp(nxClass,"NXentry") != 0){
 						NXVsetLog(self,"sev","error");
 						NXVprintLog(self,"dataPath","/%s",name);
-            NXVprintLog(self,"message",
+						NXVprintLog(self,"message",
 							"Wrong root group class %s, expected NXentry",nxClass);
 						NXVlog(self);
 					}
@@ -265,21 +265,21 @@ static herr_t NXVrootIterator(hid_t g_id,
 }
 /*---------------------------------------------------------------*/
 int NXVvalidate(pNXVcontext self, const char *dataFile,
-	        const char *nxdlFile, const char *path)
+	        const char *nxdlFile, const char *path, const int procroot)
 {
 	hid_t fileID, gid;
 	hsize_t idx = 0;
-  int status = 0, returnVal = 0;
+	int status = 0, returnVal = 0;
 
-  NXVprepareContext(self,(char *)dataFile,(char *)nxdlFile);
+	NXVprepareContext(self,(char *)dataFile,(char *)nxdlFile);
 
 
 	/*
 		switch off HDF5 error messages
 	*/
-  H5Eset_auto2( H5E_DEFAULT, NULL, NULL );
+	H5Eset_auto2( H5E_DEFAULT, NULL, NULL );
 
-  fileID = H5Fopen(self->dataFile,H5F_ACC_RDONLY ,H5P_DEFAULT );
+	fileID = H5Fopen(self->dataFile,H5F_ACC_RDONLY ,H5P_DEFAULT );
 	if(fileID< 0){
 		NXVsetLog(self, "sev","fatal");
 		NXVsetLog(self, "message","Failed to open data file");
@@ -288,7 +288,7 @@ int NXVvalidate(pNXVcontext self, const char *dataFile,
 	}
 	self->fileID = fileID;
 
-	status = validateFileAttributes(self, fileID);
+	status = validateFileAttributes(self, fileID, procroot);
 	if(status != 0){
 		returnVal = 1;
 	}
@@ -296,7 +296,7 @@ int NXVvalidate(pNXVcontext self, const char *dataFile,
 	/*
 	* we have been give an explicit path to validate
 	*/
-  if(path != NULL){
+	if(path != NULL){
 		if(nxdlFile == NULL){
 			NXVsetLog(self,"sev","fatal");
 			NXVsetLog(self,"message",
@@ -305,7 +305,7 @@ int NXVvalidate(pNXVcontext self, const char *dataFile,
 			self->errCount++;
 			return 1;
 		}
-    status = validatePath(self,(char *)path,(char *)nxdlFile);
+		status = validatePath(self,(char *)path,(char *)nxdlFile);
 	} else {
 		/*
 		  we iterate over all root level groups in

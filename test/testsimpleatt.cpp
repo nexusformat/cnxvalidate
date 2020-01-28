@@ -18,7 +18,7 @@ SCENARIO("Testing the signal attribute","[sig]"){
     REQUIRE(con != NULL);
 
     WHEN("Validating dssimpleatt.h5"){
-      int status = NXVvalidate(con,"data/dssimpleatt.h5", NULL, NULL);
+      int status = NXVvalidate(con,"data/dssimpleatt.h5", NULL, NULL, 0);
 
       THEN("Path /entry/intsignal with signal as int should not be in error"){
         REQUIRE(testNoError(testResult,"/entry/intsignal"));
@@ -45,7 +45,7 @@ SCENARIO("Testing the primary attribute","[prim]"){
     REQUIRE(con != NULL);
 
     WHEN("Validating dssimpleatt.h5"){
-      int status = NXVvalidate(con,"data/dssimpleatt.h5", NULL, NULL);
+      int status = NXVvalidate(con,"data/dssimpleatt.h5", NULL, NULL, 0);
 
       THEN("Path /entry/intprim with primary as int should not be in error"){
         REQUIRE(testNoError(testResult,"/entry/intprim"));
@@ -72,7 +72,7 @@ SCENARIO("Testing the axis attribute","[axis]"){
     REQUIRE(con != NULL);
 
     WHEN("Validating dssimpleatt.h5"){
-      int status = NXVvalidate(con,"data/dssimpleatt.h5", NULL, NULL);
+      int status = NXVvalidate(con,"data/dssimpleatt.h5", NULL, NULL, 0);
 
       THEN("Path /entry/intaxis with axis as int should not be in error"){
         REQUIRE(testNoError(testResult,"/entry/intprim"));
@@ -99,7 +99,7 @@ SCENARIO("Testing the axes attribute","[axes]"){
     REQUIRE(con != NULL);
 
     WHEN("Validating dssimpleatt.h5"){
-      int status = NXVvalidate(con,"data/dssimpleatt.h5", NULL, NULL);
+      int status = NXVvalidate(con,"data/dssimpleatt.h5", NULL, NULL, 0);
 
       THEN("Path /entry/colonaxes with axes separated by colon should not be in error"){
         REQUIRE(testNoError(testResult,"/entry/colonaxes"));
@@ -129,7 +129,7 @@ SCENARIO("Testing the data_offset and stride attributes","[stride]"){
     REQUIRE(con != NULL);
 
     WHEN("Validating dssimpleatt.h5"){
-      int status = NXVvalidate(con,"data/dssimpleatt.h5", NULL, NULL);
+      int status = NXVvalidate(con,"data/dssimpleatt.h5", NULL, NULL, 0);
 
       THEN("Path /entry/goodoffsetstride should not be in error"){
         REQUIRE(testNoError(testResult,"/entry/goodoffsetstride"));
@@ -157,7 +157,7 @@ SCENARIO("Testing the calibration attribute","[calatt]"){
     REQUIRE(con != NULL);
 
     WHEN("Validating dssimpleatt.h5"){
-      int status = NXVvalidate(con,"data/dssimpleatt.h5", NULL, NULL);
+      int status = NXVvalidate(con,"data/dssimpleatt.h5", NULL, NULL, 0);
 
       THEN("Path /entry/calnominal should not be in error"){
         REQUIRE(testNoError(testResult,"/entry/calnominal"));
@@ -183,7 +183,7 @@ SCENARIO("Testing the interpretation attribute","[interp]"){
     REQUIRE(con != NULL);
 
     WHEN("Validating dssimpleatt.h5"){
-      int status = NXVvalidate(con,"data/dssimpleatt.h5", NULL, NULL);
+      int status = NXVvalidate(con,"data/dssimpleatt.h5", NULL, NULL, 0);
 
       THEN("Path /entry/intscaler should not be in error"){
         REQUIRE(testNoError(testResult,"/entry/intscaler"));

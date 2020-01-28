@@ -18,7 +18,7 @@
       REQUIRE(con != NULL);
 
       WHEN("Validating link.h5"){
-        int status = NXVvalidate(con,"data/link.h5", NULL, NULL);
+        int status = NXVvalidate(con,"data/link.h5", NULL, NULL, 0);
 
         THEN("Path /entry/title should not be in error"){
           REQUIRE(testNoError(testResult,"/entry/title"));
@@ -34,7 +34,7 @@
       REQUIRE(con != NULL);
 
       WHEN("Validating link.h5"){
-        int status = NXVvalidate(con,"data/link.h5", NULL, NULL);
+        int status = NXVvalidate(con,"data/link.h5", NULL, NULL, 0);
 
         THEN("Path /entry/description should cause an error: bad target"){
           REQUIRE(findMessage(testResult,"/entry/description",
@@ -51,7 +51,7 @@
       REQUIRE(con != NULL);
 
       WHEN("Validating link.h5"){
-        int status = NXVvalidate(con,"data/link.h5", NULL, NULL);
+        int status = NXVvalidate(con,"data/link.h5", NULL, NULL, 0);
 
         THEN("Path /entry/revision should cause an error: missing target attribute"){
           REQUIRE(findMessage(testResult,"/entry/revision",
@@ -68,7 +68,7 @@
       REQUIRE(con != NULL);
 
       WHEN("Validating link.h5"){
-        int status = NXVvalidate(con,"data/link.h5", NULL, NULL);
+        int status = NXVvalidate(con,"data/link.h5", NULL, NULL, 0);
 
         THEN("Path /entry/hugo should cause an error: invalid link"){
           REQUIRE(findMessage(testResult,"/entry/hugo",
@@ -85,7 +85,7 @@
       REQUIRE(con != NULL);
 
       WHEN("Validating link.h5"){
-        int status = NXVvalidate(con,"data/link.h5", NULL, NULL);
+        int status = NXVvalidate(con,"data/link.h5", NULL, NULL, 0);
 
         THEN("Path /entry/fehlt should cause an error: missing link"){
           REQUIRE(findMessage(testResult,"/entry/fehlt",
