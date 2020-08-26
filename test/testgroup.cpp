@@ -18,7 +18,7 @@ SCENARIO("Verify no errors for OK group elements","[nogrouperror]"){
     REQUIRE(con != NULL);
 
     WHEN("Validating group.h5"){
-      int status = NXVvalidate(con,"data/group.h5", NULL, NULL);
+      int status = NXVvalidate(con,"data/group.h5", NULL, NULL, 0);
 
       THEN("Path /entry/title should not be in errors"){
         REQUIRE(testNoError(testResult,"/entry/title"));
@@ -40,7 +40,7 @@ SCENARIO("Warning for additional base class elements","[addbase]"){
     REQUIRE(con != NULL);
 
     WHEN("Validating group.h5"){
-      int status = NXVvalidate(con,"data/group.h5", NULL, NULL);
+      int status = NXVvalidate(con,"data/group.h5", NULL, NULL, 0);
 
       THEN("Path /entry/experiment_description should warn additional base class field"){
         REQUIRE(findMessage(testResult,"/entry/experiment_description",
@@ -61,7 +61,7 @@ SCENARIO("Warning for additional non base class elements","[nonbase]"){
     REQUIRE(con != NULL);
 
     WHEN("Validating group.h5"){
-      int status = NXVvalidate(con,"data/group.h5", NULL, NULL);
+      int status = NXVvalidate(con,"data/group.h5", NULL, NULL, 0);
 
       THEN("Path /entry/experiment_ingredients should warn additional non base class field"){
         REQUIRE(findMessage(testResult,"/entry/experiment_ingredients",
@@ -82,7 +82,7 @@ SCENARIO("Warning about non NeXus group","[nonnexusgroup]"){
     REQUIRE(con != NULL);
 
     WHEN("Validating group.h5"){
-      int status = NXVvalidate(con,"data/group.h5", NULL, NULL);
+      int status = NXVvalidate(con,"data/group.h5", NULL, NULL, 0);
       THEN("Path /entry/missing_class should warn about non NeXus group"){
         REQUIRE(findMessage(testResult,"/entry/missing_class",
           "warnundef","Additional non NeXus group"));
@@ -98,7 +98,7 @@ SCENARIO("Finding a group specified by type in NXDL","[findByType]"){
     REQUIRE(con != NULL);
 
     WHEN("Validating group.h5"){
-      int status = NXVvalidate(con,"data/group.h5", NULL, NULL);
+      int status = NXVvalidate(con,"data/group.h5", NULL, NULL, 0);
       THEN("Path /entry/data/data_sample should be validated"){
         REQUIRE(findMessage(testResult,"/entry/data/data_sample",
           "debug","Validating group"));
@@ -114,7 +114,7 @@ SCENARIO("Flag missing elements in a file","[misel]"){
     REQUIRE(con != NULL);
 
     WHEN("Validating misgroup.h5"){
-      int status = NXVvalidate(con,"data/misgroup.h5", NULL, NULL);
+      int status = NXVvalidate(con,"data/misgroup.h5", NULL, NULL, 0);
       THEN("Path /entry/title should flag an missing field error"){
         REQUIRE(findMessage(testResult,"/entry/title",
           "error","Required field missing"));

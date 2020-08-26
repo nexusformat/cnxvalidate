@@ -79,7 +79,7 @@ void NXVsetNXDLRetriever(pNXVcontext self, RetrieveNXDL retriever,
 * \return 0 when validation succeeds, 1 else.
 */
 int NXVvalidate(pNXVcontext self, const char *dataFile,
-                const char *nxdlFile, const char *path);
+                const char *nxdlFile, const char *path, const int procroot);
 
 /* NXVgetCounters retrieves the number of errors and waring found in the
  * validation run

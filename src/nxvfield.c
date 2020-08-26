@@ -11,6 +11,46 @@
 #include <string.h>
 #include <assert.h>
 #include <libxml/tree.h>
+#include <ctype.h>
+
+/*--------------------------------------------------------------*/
+static int isOptional(xmlNodePtr node)
+{
+	xmlChar *min= NULL;
+	xmlChar *opt= NULL;
+	xmlChar *rec= NULL;
+	xmlChar *name= NULL;
+	int num;
+	int istrue;
+
+	min = xmlGetProp(node,(xmlChar *)"minOccurs");
+	opt = xmlGetProp(node,(xmlChar *)"optional");
+	rec = xmlGetProp(node,(xmlChar *)"recommended");
+	name = xmlGetProp(node,(xmlChar *)"name");
+
+	if(min == NULL && opt == NULL && rec == NULL){
+	        return 0;
+	}
+	if(min != NULL) {
+	  num = atoi((char *)min);
+	  if(num == 0){
+	        return 1;
+	  } else {
+	        return 0;
+	  }
+	}
+	if(opt != NULL) {
+	  istrue = 1;
+	  if (strcmp((char *)opt,"false")==0) istrue=0;
+	  return istrue;
+	}
+	if(rec != NULL) {
+	  istrue = 1;
+	  if (strcmp((char *)rec,"false")==0) istrue=0;
+	  return istrue;
+	}
+	return 0;
+}
 
 static int testAttType(hid_t fieldID, char *name, hid_t testh5class)
 {
@@ -98,7 +138,7 @@ static void validateDataOffsetStride(pNXVcontext self, hid_t fieldID)
 	if(count == 1){
 		NXVsetLog(self,"sev","error");
 		NXVsetLog(self,"message",
-		"one of data_offset or stride missing, must come together when specified");
+			"one of data_offset or stride missing, must come together when specified");
 		NXVlog(self);
 		self->errCount++;
 	} else if(count == 0){
@@ -408,14 +448,21 @@ static void validateDimensions(pNXVcontext self, hid_t fieldID,
 	      nxdlRank = *dimInt;
 	    }
 	  }
-		if(nxdlRank != h5rank){
+		if(nxdlRank <  h5rank){
 			NXVsetLog(self,"sev","error");
 			NXVprintLog(self,"message","Rank mismatch expected %d, found %d",
 				nxdlRank, h5rank);
 			NXVlog(self);
 			self->errCount++;
 			return; /* further dimension checking makes no sense here */
-		}
+		} else if(nxdlRank >  h5rank) {
+			NXVsetLog(self,"sev","warnopt");
+			NXVprintLog(self,"message","Rank mismatch expected %d, found %d",
+				nxdlRank, h5rank);
+			NXVlog(self);
+			self->warnCount++;
+			return; /* further dimension checking makes no sense here */
+                }
 		xmlFree(data);
 	} else {
 		NXVsetLog(self,"sev","error");
@@ -437,7 +484,7 @@ static void validateDimensions(pNXVcontext self, hid_t fieldID,
 			if(index == NULL || val == NULL){
 				NXVsetLog(self,"sev","error");
 				NXVsetLog(self,"message",
-				"Invalid NXDL: dim entry is missing index or value attribute");
+					"Invalid NXDL: dim entry is missing index or value attribute");
 				NXVlog(self);
 				self->errCount++;
 				continue;
@@ -447,12 +494,12 @@ static void validateDimensions(pNXVcontext self, hid_t fieldID,
 			if(isInteger((char *)val)){
 				dimVal = atoi((char *)val);
 				if(dimVal != h5dim[idx]){
-					NXVsetLog(self,"sev","error");
+					NXVsetLog(self,"sev","warnopt");
 					NXVprintLog(self,"message",
-						"Dimension mismatch on %d, should %d, is %d",
+						"Dimension mismatch on %d, should be %d, is %d",
 						idx+1, dimVal, h5dim[idx]);
 					NXVlog(self);
-					self->errCount++;
+					self->warnCount++;
 				}
 			} else {
 				if((dimInt = (int *)hash_lookup((char *)val,&self->dimSymbols)) == NULL){
@@ -461,12 +508,12 @@ static void validateDimensions(pNXVcontext self, hid_t fieldID,
 					hash_insert((char *)val,dimInt,&self->dimSymbols);
 				} else {
 					if(*dimInt != h5dim[idx]){
-						NXVsetLog(self,"sev","error");
+						NXVsetLog(self,"sev","warnopt");
 						NXVprintLog(self,"message",
-							"Dimension mismatch on %d, should %d, is %d",
+							"Dimension mismatch on %d, should be %d, is %d",
 							idx+1, *dimInt, h5dim[idx]);
 						NXVlog(self);
-						self->errCount++;
+						self->warnCount++;
 					}
 				}
 			}
@@ -930,24 +977,31 @@ static void validateAttributes(pNXVcontext self, hid_t fieldID,
 	for(i = 0; attValData[i].name != NULL; i++){
 			data = xmlGetProp(fieldNode,(xmlChar *) attValData[i].name);
 			if(data != NULL){
-					if(attIgnored(attValData[i].name)){
+				if(attIgnored(attValData[i].name)){
 					continue;
-					}
-					if(!H5LTfind_attribute(fieldID, attValData[i].name)){
+				}
+				if(!H5LTfind_attribute(fieldID, attValData[i].name)){
+					if(!isOptional(fieldNode)) {
 						NXVsetLog(self,"sev","error");
 						NXVprintLog(self,"message","Required attribute %s missing",
 							attValData[i].name);
 						NXVlog(self);
 						self->errCount++;
 					} else {
-						status = attValData[i].dataValidator(self,fieldID, (char *)data);
-						if(status != 1){
-							NXVsetLog(self,"sev","error");
-							NXVprintLog(self,"message",
-								"Invalid value for attribute %s, should be %s",
-								attValData[i].name,(char *)data);
-							NXVlog(self);
-							self->errCount++;
+						NXVsetLog(self,"sev","warnopt");
+						NXVprintLog(self,"message","Optional attribute %s missing",
+							attValData[i].name);
+						NXVlog(self);
+					}
+				} else {
+					status = attValData[i].dataValidator(self,fieldID, (char *)data);
+					if(status != 1){
+						NXVsetLog(self,"sev","error");
+						NXVprintLog(self,"message",
+							"Invalid value for attribute %s, should be %s",
+							attValData[i].name,(char *)data);
+						NXVlog(self);
+						self->errCount++;
 						}
 					}
 					xmlFree(data);
@@ -966,11 +1020,19 @@ static void validateAttributes(pNXVcontext self, hid_t fieldID,
 				continue;
 			}
 			if(!H5LTfind_attribute(fieldID,(char*)name)){
-				NXVsetLog(self,"sev","error");
-				NXVprintLog(self,"message","Required attribute %s missing",
-					(char *)name);
-				NXVlog(self);
-				self->errCount++;
+				if(!isOptional(cur)){
+					NXVsetLog(self,"sev","error");
+					NXVprintLog(self,"message","Required attribute %s missing",
+						(char *)name);
+					NXVlog(self);
+					self->errCount++;
+				} else {
+					NXVsetLog(self,"sev","warnopt");
+					NXVprintLog(self,"message","Optional attribute %s missing",
+                                                (char *)name);
+                                        NXVlog(self);
+					self->warnCount++;
+				}
 			} else {
 				/*
 					find enumeration node
