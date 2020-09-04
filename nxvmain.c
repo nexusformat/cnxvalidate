@@ -34,10 +34,9 @@ static void defaultLogPrint(char *key, void *data)
 /*------------------------------------------------------------------*/
 static void defaultneatLogPrint(char *key, void *data)
 {
-
-        if(!strcmp(key,"sev") || !strcmp(key,"nxdlPath") ){
+	if(!strcmp(key,"sev") || !strcmp(key,"nxdlPath") ){
 		fprintf(stdout,"\n... ");
-        }
+	}
 	if(strchr((char *)data, ' ') != NULL){
 		fprintf(stdout,"%s=\"%s\" ", key, (char *)data);
 	} else {
