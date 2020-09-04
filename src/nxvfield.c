@@ -1100,7 +1100,10 @@ int NXVvalidateField(pNXVcontext self, hid_t fieldID,
   	xmlNodePtr fieldNode)
 {
   xmlNodePtr cur;
-  char fName[256], nxdlName[512];
+  char fName[257], nxdlName[512];
+  char singular_err[7] ={'_','e','r','r','o','r','\0'};
+  char* singular_err_ptr;
+  size_t ii, fName_size;
   xmlChar *name;
 	char *myPath;
 
@@ -1108,7 +1111,8 @@ int NXVvalidateField(pNXVcontext self, hid_t fieldID,
 	snprintf(nxdlName,sizeof(nxdlName),"%s/%s",
 		self->nxdlPath,name);
 	xmlFree(name);
-	H5Iget_name(fieldID,fName,sizeof(fName));
+	H5Iget_name(fieldID,fName,sizeof(fName)-1);
+        fName[256]='\0';
 	NXVsetLog(self,"sev","debug");
 	NXVsetLog(self,"message","Validating field");
 	NXVsetLog(self,"dataPath",fName);
@@ -1117,6 +1121,22 @@ int NXVvalidateField(pNXVcontext self, hid_t fieldID,
 
 	myPath = self->nxdlPath;
 	self->nxdlPath = nxdlName;
+
+        /* warn about use of singular _error ending a field name */
+
+        fName_size=strlen(fName);
+        singular_err_ptr=singular_err;
+        for (ii=fName_size-strlen(singular_err); ii>0 && ii<fName_size; ii++) {
+            if (fName[ii]!=*(singular_err_ptr++)) break;
+        } 
+        if (! (*singular_err_ptr) )
+        {
+		NXVsetLog(self,"sev","warnopt");
+		NXVprintLog(self,"message",
+			"Singular '_error' in '%s' is deprecated, 'use _errors'", fName);
+		NXVlog(self);
+		self->warnCount++;
+        }
 
   validateAttributes(self,fieldID,fieldNode);
 
