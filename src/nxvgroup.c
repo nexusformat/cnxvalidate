@@ -17,9 +17,9 @@
 static int isOptional(xmlNodePtr node)
 {
 	xmlChar *min= NULL;
-        xmlChar *opt= NULL;
-        xmlChar *name= NULL;
-        xmlChar *rec= NULL;
+	xmlChar *opt= NULL;
+	xmlChar *name= NULL;
+	xmlChar *rec= NULL;
 	int num;
 	int istrue;
 
@@ -32,22 +32,22 @@ static int isOptional(xmlNodePtr node)
 		return 0;
 	}
 	if(min != NULL) {
-	  num = atoi((char *)min);
-	  if(num == 0){
-		return 1;
-	  } else {
-		return 0;
-	  }
+		num = atoi((char *)min);
+		if(num == 0){
+			return 1;
+		} else {
+			return 0;
+		}
 	}
 	if(opt != NULL) {
-	  istrue = 1;
-	  if (strcmp((char *)opt,"false")==0) istrue=0;
-	  return istrue;
+		istrue = 1;
+		if (strcmp((char *)opt,"false")==0) istrue=0;
+		return istrue;
 	}
 	if(rec != NULL) {
-	  istrue = 1;
-	  if (strcmp((char *)rec,"false")==0) istrue=0;
-	  return istrue;
+		istrue = 1;
+		if (strcmp((char *)rec,"false")==0) istrue=0;
+		return istrue;
 	}
 	return 0;
 }
