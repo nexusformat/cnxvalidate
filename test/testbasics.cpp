@@ -18,7 +18,7 @@ SCENARIO("Failure when no file","[nofile]"){
     REQUIRE(con != NULL);
 
     WHEN("Validating doesnotexist.h5"){
-      int status = NXVvalidate(con,"doesnotexist.h5", NULL, NULL);
+      int status = NXVvalidate(con,"doesnotexist.h5", NULL, NULL, 0);
 
       THEN("Path / should report fatal error file not found"){
         REQUIRE(findMessage(testResult,"/", "fatal","Failed to open"));
@@ -34,7 +34,7 @@ SCENARIO("Missing file attributes","[noatt]"){
     REQUIRE(con != NULL);
 
     WHEN("Validating nofileattributes.h5"){
-      int status = NXVvalidate(con,"data/nofileattributes.h5", NULL, NULL);
+      int status = NXVvalidate(con,"data/nofileattributes.h5", NULL, NULL, 1);
 
       THEN("Path / should report error Missing global attribute file_name"){
         REQUIRE(findMessage(testResult,"/","error",
@@ -55,7 +55,7 @@ SCENARIO("File attributes OK","[okatt]"){
     REQUIRE(con != NULL);
 
     WHEN("Validating fileattributes.h5"){
-      int status = NXVvalidate(con,"data/fileattributes.h5", NULL, NULL);
+      int status = NXVvalidate(con,"data/fileattributes.h5", NULL, NULL, 0);
 
       THEN("Path / should report no error Missing global attribute file_name"){
         REQUIRE(!findMessage(testResult,"/","error",
@@ -76,7 +76,7 @@ SCENARIO("Malformed file time attribute","[badfiletime]"){
     REQUIRE(con != NULL);
 
     WHEN("Validating badtimeattributes.h5"){
-      int status = NXVvalidate(con,"data/badtimeattributes.h5", NULL, NULL);
+      int status = NXVvalidate(con,"data/badtimeattributes.h5", NULL, NULL, 0);
 
       THEN("Path / should report error file_time not in ISO8601"){
         REQUIRE(findMessage(testResult,"/","error",
@@ -93,7 +93,7 @@ SCENARIO("Missing application definition in entry","[missappdef]"){
     REQUIRE(con != NULL);
 
     WHEN("Validating badtimeattributes.h5"){
-      int status = NXVvalidate(con,"data/badtimeattributes.h5", NULL, NULL);
+      int status = NXVvalidate(con,"data/badtimeattributes.h5", NULL, NULL, 0);
 
       THEN("Path /entry should report error failed to find application definition"){
         REQUIRE(findMessage(testResult,"/entry","error",
@@ -110,7 +110,7 @@ SCENARIO("Locate an application definition from a definition field", "[locdef]")
     REQUIRE(con != NULL);
 
     WHEN("Validating manyentries.hy"){
-      int status = NXVvalidate(con,"data/manyentries.h5", NULL, NULL);
+      int status = NXVvalidate(con,"data/manyentries.h5", NULL, NULL, 0);
 
       THEN("Path /entry0 should validate against NXminimal"){
         REQUIRE(findMessage(testResult, "/entry0","debug",
@@ -127,7 +127,7 @@ SCENARIO("Validating multiple entries","[multientry]"){
     REQUIRE(con != NULL);
 
     WHEN("Validating manyentries.hy"){
-      int status = NXVvalidate(con,"data/manyentries.h5", NULL, NULL);
+      int status = NXVvalidate(con,"data/manyentries.h5", NULL, NULL, 0);
 
       THEN("Path /entry0 should validate against NXminimal"){
         REQUIRE(findMessage(testResult, "/entry0","debug",
@@ -153,7 +153,7 @@ SCENARIO("Complain about validating against a non existent application definitio
       REQUIRE(con != NULL);
 
       WHEN("Validating shittyapp.hy"){
-        int status = NXVvalidate(con,"data/shittyapp.h5", NULL, NULL);
+        int status = NXVvalidate(con,"data/shittyapp.h5", NULL, NULL, 0);
 
         THEN("Path /entry should validate against NXshitty"){
           REQUIRE(findMessage(testResult, "/entry","debug",
@@ -176,7 +176,7 @@ SCENARIO("Validate against a specified application definition",
       REQUIRE(con != NULL);
 
       WHEN("Validating shittyapp.h5 against NXminimal"){
-        int status = NXVvalidate(con,"data/shittyapp.h5", "NXminimal", NULL);
+        int status = NXVvalidate(con,"data/shittyapp.h5", "NXminimal", NULL, 0);
 
         THEN("Path /entry should validate against NXminimal"){
           REQUIRE(findMessage(testResult, "/entry","debug",
@@ -195,7 +195,7 @@ SCENARIO("Validating against an application defintion with inheritance",
     REQUIRE(con != NULL);
 
     WHEN("Validating inherit.h5"){
-      int status = NXVvalidate(con,"data/inherit.h5", NULL, NULL);
+      int status = NXVvalidate(con,"data/inherit.h5", NULL, NULL, 0);
 
       THEN("Field /entry/title should validate"){
         REQUIRE(findMessage(testResult, "/entry/title","debug",
@@ -216,7 +216,7 @@ SCENARIO("Validating against multiple subentries","[multisub]"){
     REQUIRE(con != NULL);
 
     WHEN("Validating subentry.h5"){
-      int status = NXVvalidate(con,"data/subentry.h5", NULL, NULL);
+      int status = NXVvalidate(con,"data/subentry.h5", NULL, NULL, 0);
 
       THEN("Path /entry/sub1 should validate against NXminimal"){
         REQUIRE(findMessage(testResult, "/entry/sub1","debug",
@@ -244,7 +244,7 @@ SCENARIO("Omit wrong group error when checking NXsubentry","[subentry]"){
     REQUIRE(con != NULL);
 
     WHEN("Validating subentry.h5"){
-      int status = NXVvalidate(con,"data/subentry.h5", NULL, NULL);
+      int status = NXVvalidate(con,"data/subentry.h5", NULL, NULL, 0);
 
       THEN("Path /entry/sub1 should not give a wrong group error"){
         REQUIRE_FALSE(findMessage(testResult, "/entry/sub1","error",
@@ -261,7 +261,7 @@ SCENARIO("Fail to validate NXsubentry with missing definition","[subNO]"){
     REQUIRE(con != NULL);
 
     WHEN("Validating subNOdef.h5"){
-      int status = NXVvalidate(con,"data/subNOdef.h5", NULL, NULL);
+      int status = NXVvalidate(con,"data/subNOdef.h5", NULL, NULL, 0);
 
       THEN("Path /entry/sub1 should report error failed to find application definition"){
         REQUIRE(findMessage(testResult,"/entry/sub1","error",
@@ -278,7 +278,7 @@ SCENARIO("Validate with path and application definition specified","[spec]"){
 
     WHEN("Validating subNOdef.h5 path /entry/sub1, application definition NXminimal"){
       int status = NXVvalidate(con,"data/subNOdef.h5",
-        "NXminimal", "/entry/sub1");
+        "NXminimal", "/entry/sub1", 0);
 
       THEN("Path /entry/sub1 should validate against NXminimal"){
         REQUIRE(findMessage(testResult, "/entry/sub1","debug",
@@ -295,7 +295,7 @@ SCENARIO("Testing recursion through file","[recu]"){
 
     WHEN("Validating recurse.h5"){
       int status = NXVvalidate(con,"data/recurse.h5",
-        NULL, NULL);
+        NULL, NULL, 0);
 
         THEN("Field /entry/title should validate"){
           REQUIRE(findMessage(testResult, "/entry/title","debug",
@@ -333,7 +333,7 @@ SCENARIO("Validate a file with a variable length NX_class attribute","[var]"){
 
     WHEN("Validating writer_2.1.hdf5 "){
       int status = NXVvalidate(con,"data/writer_2.1.hdf5",
-        NULL, NULL);
+        NULL, NULL, 0);
 
       THEN("Path /entry should have no No NX_class attribute error"){
         REQUIRE(!findMessage(testResult, "/entry","debug",
@@ -351,7 +351,7 @@ SCENARIO("Validate a file with a variable length NX_class attribute and a variab
 
     WHEN("Validating varlen.h5 "){
       int status = NXVvalidate(con,"data/varlen.h5",
-        NULL, NULL);
+        NULL, NULL, 0);
 
       THEN("Path /entry should have no No NX_class attribute error"){
         REQUIRE(!findMessage(testResult, "/entry","debug",

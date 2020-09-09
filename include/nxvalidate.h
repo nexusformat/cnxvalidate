@@ -79,9 +79,9 @@ void NXVsetNXDLRetriever(pNXVcontext self, RetrieveNXDL retriever,
 * \return 0 when validation succeeds, 1 else.
 */
 int NXVvalidate(pNXVcontext self, const char *dataFile,
-                const char *nxdlFile, const char *path);
+                const char *nxdlFile, const char *path, const int procroot);
 
-/* NXVgetCounters retrieves the number of errors and waring found in the
+/* NXVgetCounters retrieves the number of errors and warning found in the
  * validation run
  * \param self the validation context
  * \param errCount A pointer to an int variable which will be filled with the
