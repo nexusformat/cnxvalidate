@@ -20,6 +20,7 @@ static int isOptional(xmlNodePtr node)
 	xmlChar *opt= NULL;
 	xmlChar *name= NULL;
 	xmlChar *rec= NULL;
+
 	int num;
 	int istrue;
 

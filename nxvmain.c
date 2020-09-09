@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
 
 	while ((c = getopt (argc, argv, "a:l:p:obduter")) != -1) {
 		switch (c)
-    		{
+    {
 			case 'e':
 				filt.neat = 1;
 				break;
