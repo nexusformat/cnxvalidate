@@ -224,59 +224,6 @@ static hid_t findGroup(pNXVcontext self, hid_t parentGroup, xmlNodePtr groupNode
 
 	return -1;
 }
-/*--------------------------------------------------------------
-  This is tricky ans the NXDL target only contains group
-	names. I do this by working myself backward from the
-	links path and check that all encountered groups have the
-	right type. Another complication is that where a NXentry is
-	called for, a NXsubentry will do too.
-----------------------------------------------------------------*/
-static void validateLinkTarget(pNXVcontext self, xmlChar *target,
-	char *hdfTarget)
-{
-	char *nxdlTarget = strdup((char *)target);
-	char *pClass = NULL, data[512], *pPtr;
-	herr_t attID;
-
-	pPtr = strrchr(hdfTarget,'/');
-	*pPtr = '\0';
-	pClass = strrchr(nxdlTarget,'/');
-	*pClass = '\0';
-
-	pClass = strrchr(nxdlTarget,'/');
-	while(pClass != NULL && strlen(pClass) > 1){
-		memset(data,0,sizeof(data));
-		attID = H5NXget_attribute_string(self->fileID,hdfTarget,"NX_class",
-						 data, sizeof(data));
-		if(attID < 0){
-			free(nxdlTarget);
-			NXVsetLog(self,"sev","error");
-			NXVprintLog(self,"message","Missing NX_class attribute at %s",
-				hdfTarget);
-			NXVlog(self);
-			self->errCount++;
-			return ;
-		}
-		if(strcmp(data, pClass+1) != 0){
-			if(strcmp(pClass+1,"NXentry") != 0 && strcmp(data,"NXsubentry") != 0){
-				free(nxdlTarget);
-				NXVsetLog(self,"sev","error");
-				NXVprintLog(self,"message","Link group mismatch, expected %s, got %s",
-					pClass+1, data);
-				NXVlog(self);
-				self->errCount++;
-				return ;
-			}
-		}
-		pPtr = strrchr(hdfTarget,'/');
-		*pPtr = '\0';
-		*pClass = '\0';
-		pClass = strrchr(nxdlTarget,'/');
-	}
-
-	free(nxdlTarget);
-	return;
-}
 /*--------------------------------------------------------------*/
 static void validateLink(pNXVcontext self, hid_t groupID,
 		xmlChar *name, xmlChar *target)
@@ -339,9 +286,7 @@ static void validateLink(pNXVcontext self, hid_t groupID,
 					linkTarget);
 				NXVlog(self);
 				self->errCount++;
-			} else {
-				validateLinkTarget(self,target,linkTarget);
-			}
+			} 
 		}
 		H5Oclose(objID);
 	} else {
