@@ -37,6 +37,8 @@ link_directories(${HDF5_LIBRARY_DIRS})
 #------------------------------------------------------------------------------
 add_library (NXV_Static_Library STATIC ${NXVSRC})
 
+add_definitions(-DH5_USE_18_API_DEFAULT)
+
 set_target_properties(NXV_Static_Library PROPERTIES
                       OUTPUT_NAME nxvalidate)
 
