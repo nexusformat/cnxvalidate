@@ -596,7 +596,7 @@ static void validateDependsOn(pNXVcontext self, hid_t groupID,
 
 }
 /*---------------------------------------------------------------
-For group validationwe  need two passes:
+For group validation we need two passes:
 
 * In the first pass we try to find all the stuff in the NXDL
   group
