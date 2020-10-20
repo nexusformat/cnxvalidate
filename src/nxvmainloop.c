@@ -52,16 +52,16 @@ static int validateFileAttributes(pNXVcontext self, hid_t fileID, const int proc
 	NXVsetLog(self,"dataPath","/");
 	attID = H5NXget_attribute_string(fileID,"/","file_name",data,sizeof(data));
 	if(attID < 0){
-		NXVsetLog(self,"sev","error");
-		NXVsetLog(self,"message","Missing required global file_name attribute");
+		NXVsetLog(self,"sev","warnopt");
+		NXVsetLog(self,"message","Missing recommended global file_name attribute");
 		NXVlog(self);
 		self->errCount++;
 	}
 
 	attID = H5NXget_attribute_string(fileID,"/","file_time",data,sizeof(data));
 	if(attID < 0){
-		NXVsetLog(self,"sev","error");
-		NXVsetLog(self,"message","Missing required global file_time attribute");
+		NXVsetLog(self,"sev","warnopt");
+		NXVsetLog(self,"message","Missing recommended global file_time attribute");
 		NXVlog(self);
 		self->errCount++;
 	} else {

@@ -36,13 +36,13 @@ SCENARIO("Missing file attributes","[noatt]"){
     WHEN("Validating nofileattributes.h5"){
       int status = NXVvalidate(con,"data/nofileattributes.h5", NULL, NULL, 1);
 
-      THEN("Path / should report error Missing global attribute file_name"){
-        REQUIRE(findMessage(testResult,"/","error",
-        "Missing required global file_name"));
+      THEN("Path / should report warning Missing recommende attribute file_name"){
+        REQUIRE(findMessage(testResult,"/","warnopt",
+        "Missing recommended global file_name"));
       }
-      AND_THEN("Path / should report error Missing global attribute file_name"){
-        REQUIRE(findMessage(testResult,"/","error",
-        "Missing required global file_time"));
+      AND_THEN("Path / should report warning Missing recommended attribute file_name"){
+        REQUIRE(findMessage(testResult,"/","warnopt",
+        "Missing recommended global file_time"));
       }
     }
   }
