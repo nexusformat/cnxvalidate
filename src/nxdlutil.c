@@ -248,16 +248,22 @@ int NXVloadAppDef(pNXVcontext self, char *nxdlFile)
 	char *pPtr = NULL;
   char *xmlData = NULL;
 	xmlNodePtr root = NULL;
-  /*
-	 get at the raw name without any extras. Such as that the
-	 retriever can do her job properly
-	 */
-	pPtr = strrchr(nxdlFile,'/');
-	if(pPtr == NULL){
+
+	/* First try: we have a correct and findable application defintion */
+	xmlData = self->nxdlRetriever(nxdlFile, self->retrieverUserData);
+	if(xmlData == NULL) {
+	  /*
+	    get at the raw name without any extras. Such as that the
+	    retriever can do her job properly
+	  */
+	  pPtr = strrchr(nxdlFile,'/');
+	  if(pPtr == NULL){
 		pPtr = nxdlFile;
+	  }
+
+	  xmlData = self->nxdlRetriever(pPtr,self->retrieverUserData);
 	}
 
-  xmlData = self->nxdlRetriever(pPtr,self->retrieverUserData);
 	if(xmlData == NULL){
 		NXVsetLog(self,"sev","fatal");
 		NXVsetLog(self,"message","Failed to load application definition");
