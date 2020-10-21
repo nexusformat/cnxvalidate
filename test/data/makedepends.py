@@ -35,6 +35,7 @@ makeSkeleton('good')
 
 ds = f['/good/sample/rotation_angle']
 setCIF(ds,(0.,0.,0.),(0.,1.,0.),'rotation','transform/z')
+
 trans = f['/good/sample/transform']
 
 ds = trans.create_dataset('x',(1,),'f32')
@@ -47,6 +48,11 @@ setCIF(ds,(0.,0.,0.),(0.,0.,1.),'translation','.')
 
 transdep = f['/good/sample/transform/depends_on']
 transdep[0] = numpy.string_('x')
+
+# A test case for checking when starting at a dataset attribute
+ds = f.create_dataset('/good/sample/test_att', (1,), 'f32')
+ds0 = -17.;
+setCIF(ds,(0.,0.,0.),(0.,1.,1.),'translation','/good/sample/z')
 
 # A case where the start point of the depends_on chain is wrong
 makeSkeleton('startwrong')

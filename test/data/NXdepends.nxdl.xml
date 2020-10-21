@@ -40,6 +40,7 @@
       </field>
       <group type="NXsample" name="sample">
         <field name="rotation_angle" type="NX_FLOAT"/>
+        <field name="test_att" type="NX_FLOAT"/>
         <group type="NXtransformations" name="transform">
           <field name="depends_on" type="NX_CHAR"/>
           <field name="x" type="NX_FLOAT"/>

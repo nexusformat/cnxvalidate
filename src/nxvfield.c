@@ -1096,8 +1096,8 @@ static void validateAttributes(pNXVcontext self, hid_t fieldID,
 	validateCalibration(self,fieldID);
 }
 /*--------------------------------------------------------------*/
-int NXVvalidateField(pNXVcontext self, hid_t fieldID,
-  	xmlNodePtr fieldNode)
+int NXVvalidateField(pNXVcontext self, hid_t groupID, 
+		     hid_t fieldID, xmlNodePtr fieldNode)
 {
   xmlNodePtr cur;
   char fName[257], nxdlName[512];
@@ -1138,7 +1138,11 @@ int NXVvalidateField(pNXVcontext self, hid_t fieldID,
 		self->warnCount++;
         }
 
-  validateAttributes(self,fieldID,fieldNode);
+	validateAttributes(self,fieldID,fieldNode);
+
+	if(self->validateDependsOnAtt && H5LTfind_attribute(fieldID,"depends_on")){
+	  validateDependsOnField(self, groupID, fieldID);
+	}
 
 	cur = fieldNode->xmlChildrenNode;
 	while(cur != NULL){

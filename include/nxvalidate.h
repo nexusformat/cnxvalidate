@@ -30,6 +30,14 @@ pNXVcontext NXVinit(const char *nxdlDir);
  */
 void NXVkill(pNXVcontext self);
 
+ /*
+  * NXsetDependsOn sets a flag which enables checking of all datasets 
+  * having a depends_on attribute. By default only depends_on chains 
+  * starting froma depends_on field are checked.
+  * \param self The validation context
+  * \param value 0 disables this check, 1 enables it
+  */
+ void NXVsetDependsOn(pNXVcontext self, int value);
 
 /*
  * This is the signature for a function processing a validation error or

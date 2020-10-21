@@ -30,6 +30,8 @@ typedef struct __NXVContext {
 		unsigned int warnCount;
 		xmlDocPtr nxdlDoc;  /* The XML document against we are validating */
 		hash_table dimSymbols; /* The symbol table for dimensions symbols */
+                int validateDependsOnAtt; /* validate depends_on chains at each dataset
+                                             with a depends_on attribute */ 
 }NXVcontext;
 
 /*
@@ -63,10 +65,16 @@ int NXVvalidateGroup(pNXVcontext self, hid_t groupID,
 	xmlNodePtr groupNode);
 
 /*
+  implemented in nxvgroup.c
+*/
+void validateDependsOnField(pNXVcontext self,
+			    hid_t groupID,hid_t dpFieldID);
+
+/*
  * implemented in nxvfield.c
  */
- int NXVvalidateField(pNXVcontext self, hid_t fieldID,
- 	xmlNodePtr groupNode);
+int NXVvalidateField(pNXVcontext self, hid_t groupID, 
+		     hid_t fieldID, xmlNodePtr groupNode);
 
 /*
  * implemented in nxvmainloop.c

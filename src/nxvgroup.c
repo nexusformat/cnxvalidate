@@ -472,7 +472,7 @@ static void validateDependsOnAttributes(pNXVcontext self,hid_t dpField)
 
 }
 /*--------------------------------------------------------------*/
-static void validateDependsOnField(pNXVcontext self,
+void validateDependsOnField(pNXVcontext self,
 		hid_t groupID,hid_t dpFieldID)
 {
 	char fname[512], transData[512];
@@ -801,7 +801,7 @@ int NXVvalidateGroup(pNXVcontext self, hid_t groupID,
 							*/
 							validateDependsOn(self,groupID,childID);
 						} else {
-							NXVvalidateField(self,childID, cur);
+						  NXVvalidateField(self,groupID, childID, cur);
 						}
 						hash_insert((char *)name,strdup(""),&namesSeen);
 					}

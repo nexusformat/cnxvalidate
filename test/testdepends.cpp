@@ -130,3 +130,36 @@ SCENARIO("Flag errors when depends_on family attributes are missing","[depmisatt
     }
   }
 }
+SCENARIO("Test depends_on chain from attribute","[depdepatt]"){
+  GIVEN("An initialized validation context"){
+    pNXVcontext con = NXVinit("data");
+    NXVsetDependsOn(con, 1);
+    multimap<string,string> *testResult = prepareTest(con);
+    REQUIRE(con != NULL);
+
+    WHEN("Validating depends.h5"){
+      int status = NXVvalidate(con,"data/depends.h5", NULL, NULL, 0);
+			THEN("Path /good/sample/test_att should report being dependecy tested "){
+				REQUIRE(findMessage(testResult,"/good/sample/test_att", "debug",
+				"Validating depends_on element /good/sample/test_att"));
+			}
+    }
+  }
+}
+
+SCENARIO("Do not test depends_on chain from attribute","[depdepnoatt]"){
+  GIVEN("An initialized validation context"){
+    pNXVcontext con = NXVinit("data");
+    NXVsetDependsOn(con, 0);
+    multimap<string,string> *testResult = prepareTest(con);
+    REQUIRE(con != NULL);
+
+    WHEN("Validating depends.h5"){
+      int status = NXVvalidate(con,"data/depends.h5", NULL, NULL, 0);
+			THEN("Path /good/sample/test_att should not being "){
+				REQUIRE(!findMessage(testResult,"/good/sample/test_att", "debug",
+				"Validating depends_on element /good/sample/test_att"));
+			}
+    }
+  }
+}

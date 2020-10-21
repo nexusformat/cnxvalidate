@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
 	pNXVcontext nxvContext = NULL;
 	char *defDir = strdup("/usr/local/lib/nexus_definitions");
 	char *appDef = NULL, *hdf5Path = NULL;
-	int warnOpt = 0, warnBase = 0, warnUndefined = 0;
+	int warnOpt = 0, warnBase = 0, warnUndefined = 0, validateDependsOnAtt = 0;
 	char c;
 	int status = 0, errCount = 0, warnCount = 0;
 	PrintFilter filt;
@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
 	filt.procroot = 0;
 
 
-	while ((c = getopt (argc, argv, "a:l:p:obduter")) != -1) {
+	while ((c = getopt (argc, argv, "a:l:p:obduterx")) != -1) {
 		switch (c)
     {
 			case 'e':
@@ -124,6 +124,9 @@ int main(int argc, char *argv[])
 				filt.warnOpt = 1;
 				filt.procroot = 1;
 				break;
+                        case 'x':
+			        validateDependsOnAtt = 1;
+			        break;
 			case 'a':
 				appDef = strdup(optarg);
 				break;
@@ -158,6 +161,7 @@ int main(int argc, char *argv[])
 		fprintf(stderr,"    -u Warn about undefined additional elements in the data file\n");
 		fprintf(stderr,"    -o Warn about optional elements which are not present in the datafile\n");
 		fprintf(stderr,"    -r Process the root group\n");
+		fprintf(stderr,"    -x Check the depends_on chain for every dataset with the depends_on attribute\n");
 		exit(1);
 	}
 
@@ -166,6 +170,7 @@ int main(int argc, char *argv[])
 		fprintf(stdout,"ERROR: failed to allocate validation context\n");
 		exit(1);
 	}
+	NXVsetDependsOn(nxvContext, validateDependsOnAtt);
 	NXVsetLogger(nxvContext, FilteringLogger, &filt);
 	status =  NXVvalidate(nxvContext, argv[optind], appDef, hdf5Path, filt.procroot);
 	NXVgetCounters(nxvContext, &errCount, &warnCount);

@@ -124,6 +124,7 @@ pNXVcontext NXVinit(const char *nxdlDir)
 	self->retrieverUserData = (char *)nxdlDir;
 	hash_construct_table(&self->logData,50);
 	hash_construct_table(&self->dimSymbols,20);
+        self->validateDependsOnAtt = 0;
 	return self;
 }
 /*----------------------------------------------------------------*/
@@ -144,6 +145,11 @@ void NXVkill(pNXVcontext self)
 		hash_free_table(&self->logData,free);
 		hash_free_table(&self->dimSymbols,free);
 		free(self);
+}
+/*----------------------------------------------------------------*/
+void NXVsetDependsOn(pNXVcontext self, int value)
+{
+  self->validateDependsOnAtt = value;
 }
 /*----------------------------------------------------------------*/
 void NXVsetNXDLRetriever(pNXVcontext self, RetrieveNXDL retriever,
