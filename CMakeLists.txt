@@ -73,19 +73,8 @@ include(FindPkgConfig)
 #----------------------------------------------------------------
 # Dependencies
 #----------------------------------------------------------------
-find_package(HDF5 REQUIRED)
+find_package(HDF5 REQUIRED COMPONENTS CXX HL)
 find_package(LibXml2)
-
-# This is an ugly hack to work around the fact that the default
-# cmake HDF5 library search thing does not set this variable though
-# it says it does. This is actually a known and fixed bug in cmake
-# and the need  for this hack will go away when cmake has been
-# updated to a 2016 version
-
-set(HDF5_HL_LIBRARIES "/usr/lib/x86_64-linux-gnu/hdf5/serial/libhdf5_hl.so")
-#set(HDF5_HL_LIBRARIES "/home/yaya/lib/libhdf5_hl.so")
-#set(HDF5_HL_LIBRARIES "/usr/pkg/lib/libhdf5_hl.dylib")
-#set(HDF5_HL_LIBRARIES "/afs/psi.ch/project/sinq/sl6/lib/libhdf5_hl.so")
 
 #--------------------------------------------------------------
 # Our own stuff, really....
