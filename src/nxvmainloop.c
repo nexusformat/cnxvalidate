@@ -75,8 +75,8 @@ static int validateFileAttributes(pNXVcontext self, hid_t fileID, const int proc
 
 	attID = H5NXget_attribute_string(fileID,"/","HDF5_Version",data,sizeof(data));
 	if(attID < 0){
-		NXVsetLog(self,"sev","error");
-		NXVsetLog(self,"message","Missing required global HDF5_Version attribute");
+		NXVsetLog(self,"sev","warnopt");
+		NXVsetLog(self,"message","Missing optional global HDF5_Version attribute");
 		NXVlog(self);
 		self->errCount++;
         }       
