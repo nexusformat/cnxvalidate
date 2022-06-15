@@ -75,3 +75,15 @@ Currently you have to build nxvalidate from source.
 
 This should get it done.
 When this job has been finished, there may be binary builds as well.
+
+In addition to cnxvalidate, you will need a copy of the NeXus base class and application definition.  This
+is where you need to point to with the -l option. You can get a copy the NeXus definitions with the command:
+
+    git clone https://github.com/nexusformat/definitions.git
+
+
+If you need to validate against a specific version of the NeXus definitions, you have to checkout the
+corresponding tag in the definitions repository. See the git documentation for details on how to do this.
+
+
+
