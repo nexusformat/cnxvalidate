@@ -160,10 +160,10 @@ static herr_t NXVentryIterator(hid_t g_id,
 				validatePath(self,nxPath,definition);
 				self->subEntryFound = 1;
 			} else {
-				NXVsetLog(self,"sev","error");
+				NXVsetLog(self,"sev","warnopt");
 				NXVsetLog(self,"dataPath",nxPath);
 				NXVprintLog(self,"message",
-				"Cannot validate %s, no application definition",nxClass);
+				"Cannot fully validate %s, no application definition",nxClass);
 				NXVlog(self);
 				H5Iget_name(g_id,nxPath,sizeof(nxPath));
 				NXVsetLog(self,"dataPath",nxPath);
