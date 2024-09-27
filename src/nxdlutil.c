@@ -11,6 +11,7 @@
 #include <libxml/xmlmemory.h>
 #include <libxml/parser.h>
 #include <string.h>
+#include <stdlib.h>
 
 /*----------------------------------------------------*/
 static xmlChar *findGroupName(xmlNodePtr group)

@@ -1,5 +1,5 @@
 /**
- * This file contains some uitility functions for use within cnxvalidate. 
+ * This file contains some uitility functions for use within cnxvalidate.
  * As of now, only the string attribute reading function
  *
  * Mark Koennecke, mark.koennecke@psi.ch, July 2016
@@ -8,6 +8,7 @@
 #include <hdf5.h>
 #include <hdf5_hl.h>
 #include <string.h>
+#include <stdlib.h>
 
 herr_t H5NXget_attribute_string( hid_t loc_id, const char *obj_name, const char *attr_name,
 				 char *data, size_t datalen )
@@ -18,15 +19,15 @@ herr_t H5NXget_attribute_string( hid_t loc_id, const char *obj_name, const char 
     hid_t attr_type, space;
     char *varData;
     herr_t result;
-    
+
     /* check the arguments */
-    if (obj_name == NULL) 
+    if (obj_name == NULL)
       return -1;
-    if (attr_name == NULL) 
+    if (attr_name == NULL)
       return -1;
 
     /* Open the object */
-    if ((obj_id = H5Oopen( loc_id, obj_name, H5P_DEFAULT)) < 0) 
+    if ((obj_id = H5Oopen( loc_id, obj_name, H5P_DEFAULT)) < 0)
         return -1;
 
     if(( attr_id = H5Aopen(obj_id, attr_name, H5P_DEFAULT)) < 0) {
@@ -38,11 +39,11 @@ herr_t H5NXget_attribute_string( hid_t loc_id, const char *obj_name, const char 
     space = H5Aget_space(attr_id);
 
     if (H5Tis_variable_str(attr_type)) {
-      hid_t btype = H5Tget_native_type(attr_type, H5T_DIR_ASCEND); 
+      hid_t btype = H5Tget_native_type(attr_type, H5T_DIR_ASCEND);
       result = H5Aread(attr_id, btype, &varData);
       H5Tclose(btype);
       /*
-        There is a memory leak with varData here. However, if I call the reclaim function 
+        There is a memory leak with varData here. However, if I call the reclaim function
         from the HDF5 API on it, I get a core dump.....
       */
       strncpy(data,varData,datalen-1);
@@ -51,7 +52,7 @@ herr_t H5NXget_attribute_string( hid_t loc_id, const char *obj_name, const char 
     }
 
     H5Tclose(attr_type);
-    
+
     H5Sclose(space);
     H5Aclose(attr_id);
     H5Oclose(obj_id);
@@ -59,7 +60,7 @@ herr_t H5NXget_attribute_string( hid_t loc_id, const char *obj_name, const char 
     return result;
 }
 /*-------------------------------------------------------------------------------
- A fixed version of H5LTread_dataset_string() which gest the fucking variable length 
+ A fixed version of H5LTread_dataset_string() which gest the fucking variable length
  strings right.
  ----------------------------------------------------------------------------------*/
 
@@ -73,9 +74,9 @@ herr_t H5NXread_dataset_string( hid_t loc_id,
     H5T_class_t tclass;
     char **vstrdata;
     hid_t memtype_id;
-    
+
     /* check the arguments */
-    if (dset_name == NULL) 
+    if (dset_name == NULL)
       return -1;
 
     /* Open the dataset. */
@@ -93,7 +94,7 @@ herr_t H5NXread_dataset_string( hid_t loc_id,
       H5Dread(did,memtype_id,H5S_ALL,H5S_ALL,H5P_DEFAULT,vstrdata);
       buf[0] = '\0';
        /*
-	 This will also only work for single variable length strings and not arrays of them. 
+	 This will also only work for single variable length strings and not arrays of them.
 
        */
       strncpy(buf,vstrdata[0],buflen-1);
@@ -119,4 +120,3 @@ out:
     } H5E_END_TRY;
     return -1;
 }
-
