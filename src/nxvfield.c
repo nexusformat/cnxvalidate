@@ -12,6 +12,7 @@
 #include <assert.h>
 #include <libxml/tree.h>
 #include <ctype.h>
+#include <stdlib.h>
 
 /*--------------------------------------------------------------*/
 static int isOptional(xmlNodePtr node)
@@ -1096,7 +1097,7 @@ static void validateAttributes(pNXVcontext self, hid_t fieldID,
 	validateCalibration(self,fieldID);
 }
 /*--------------------------------------------------------------*/
-int NXVvalidateField(pNXVcontext self, hid_t groupID, 
+int NXVvalidateField(pNXVcontext self, hid_t groupID,
 		     hid_t fieldID, xmlNodePtr fieldNode)
 {
   xmlNodePtr cur;
@@ -1128,7 +1129,7 @@ int NXVvalidateField(pNXVcontext self, hid_t groupID,
         singular_err_ptr=singular_err;
         for (ii=fName_size-strlen(singular_err); ii>0 && ii<fName_size; ii++) {
             if (fName[ii]!=*(singular_err_ptr++)) break;
-        } 
+        }
         if (! (*singular_err_ptr) )
         {
 		NXVsetLog(self,"sev","warnopt");

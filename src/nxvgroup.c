@@ -12,6 +12,7 @@
 #include <hdf5.h>
 #include <hdf5_hl.h>
 #include <libxml/tree.h>
+#include <stdlib.h>
 
 /*--------------------------------------------------------------*/
 static int isOptional(xmlNodePtr node)
@@ -27,7 +28,7 @@ static int isOptional(xmlNodePtr node)
 	min = xmlGetProp(node,(xmlChar *)"minOccurs");
 	opt = xmlGetProp(node,(xmlChar *)"optional");
 	rec = xmlGetProp(node,(xmlChar *)"recommended");
-	name = xmlGetProp(node,(xmlChar *)"name");       
+	name = xmlGetProp(node,(xmlChar *)"name");
 
 	if(min == NULL && opt == NULL && rec == NULL){
 		return 0;
@@ -286,7 +287,7 @@ static void validateLink(pNXVcontext self, hid_t groupID,
 					linkTarget);
 				NXVlog(self);
 				self->errCount++;
-			} 
+			}
 		}
 		H5Oclose(objID);
 	} else {
@@ -578,7 +579,7 @@ static void validateDependsOn(pNXVcontext self, hid_t groupID,
 		find the field and start iterating through the chain
 	*/
 
-        if (strcmp(dpData,".")!=0) { 
+        if (strcmp(dpData,".")!=0) {
 	dpfieldID = findDependentField(self,fieldID,dpData);
 	if(dpfieldID < 0){
 		NXVsetLog(self,"sev","error");
